@@ -69,9 +69,9 @@ class App extends Component {
     return (
       <div className={app}>
         <CssBaseline />
-        <AppHeader addCategory={this.handleAddCategory}/>
+        <AppHeader currentCategories={this.state.allCategories} addCategory={this.handleAddCategory}/>
           
-        <Grade />
+        <Grade categories={this.state.allCategories} data={this.state.allData}/>
 
         <Grid style={{display: 'flex', flexWrap: 'wrap' }}>
           {this.renderCategories()}

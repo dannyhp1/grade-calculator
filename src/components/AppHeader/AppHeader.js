@@ -64,6 +64,19 @@ class AppHeader extends Component {
       // weights never exceed 100 [TODO].
       alert('Your category weight can only be between 1 and 100!');
     } else {
+      // Check to see if there's another category with the same name. If there is,
+      // they cannot proceed. [TODO - convert array to HashMap for easier access].
+      
+      /* CHANGE IMPLEMENTATION OF THIS FOR IT TO BE FASTER! CHANGE THE DATA STRUCTURE
+      IN APP.JS WHERE this.props.currentCategories IS A HASHMAP INSTEAD. */
+      var amountCategories = this.props.currentCategories.length;
+      for(var i = 0; i < amountCategories; ++i) {
+        if(this.props.currentCategories[i].name === categoryName) {
+          alert('You already have a category named "' + categoryName + '". You must change the current category name before proceeding.');
+          return;
+        }
+      }
+
       // If the inputs are valid, close the dialogue and add the category.
       this.handleCloseCategory();
       this.props.addCategory(categoryName, categoryWeight);

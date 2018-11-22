@@ -84,6 +84,8 @@ class Category extends Component {
     const assignmentScore = parseFloat(this.state.newDataScore);
     const assignmentMaxScore = parseFloat(this.state.newDataMax);
 
+    console.log(this.props.currentCategories);
+
     if(assignmentName === '') {
       alert('You cannot add an assignment with an empty name!');
     } else if(assignmentScore < 0) {
