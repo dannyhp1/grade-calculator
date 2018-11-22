@@ -10,6 +10,16 @@ Currently deployed at: https://grade-calculator.netlify.com/
 #### 2. Run `npm install` in the project root.
 #### 3. Run `npm start` in the project root. The project will be deployed to: `localhost:3000` by default.
 
+## Known bugs:
+Grade Calculator is still in its development phase, so there are many bugs within the application.
+- The design of the application (mostly responsive issues).
+  - May not be fully responsive.
+  - Categories are not aligned correctly (only fits 2 per row maximum).
 
-## Changes to come:
-The tool is currently still in the development phase. There are many additional features are planned for the future.
+## Future plans:
+As you may have noticed, Grade Calculator is just a prototype. We plan to have the final version feature many more features.
+- Deletion of categories.
+- Deletion of certain assignments in each category.
+- Editing the score & max score of each assignment.
+- Grading Calculator for different classes (interchangable screens).
+- Saving and loading up your grades (continually updating them).
