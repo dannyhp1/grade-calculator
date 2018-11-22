@@ -69,7 +69,9 @@ class App extends Component {
     return (
       <div className={app}>
         <CssBaseline />
-        <AppHeader currentCategories={this.state.allCategories} addCategory={this.handleAddCategory}/>
+        <AppHeader currentCategories={this.state.allCategories} 
+                   addCategory={this.handleAddCategory}
+                   currentWeight={this.state.totalWeight}/>
           
         <Grade categories={this.state.allCategories} data={this.state.allData}/>
 

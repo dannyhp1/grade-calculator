@@ -60,8 +60,6 @@ class AppHeader extends Component {
       // Change this to an error notification bar in the future. [TODO]
       alert('You cannot add a category with an empty name!');
     } else if(categoryWeight <= 0 || categoryWeight > 100) {
-      // Change this in the future for success notification AND make sure the
-      // weights never exceed 100 [TODO].
       alert('Your category weight can only be between 1 and 100!');
     } else {
       // Check to see if there's another category with the same name. If there is,
@@ -75,6 +73,15 @@ class AppHeader extends Component {
           alert('You already have a category named "' + categoryName + '". You must change the current category name before proceeding.');
           return;
         }
+      }
+
+      // Check to see if the weight will be over 100 when this category is added.
+      // If it is, this shouldn't be valid!
+      var combinedWeight = categoryWeight + this.props.currentWeight;
+      if(combinedWeight > 100.00) {
+        var maximumWeight = 100.00 - this.props.currentWeight;
+        alert(categoryName + ' cannot have a weight of ' + categoryWeight + '. The maximum weight you can give this category is: ' + maximumWeight);
+        return;
       }
 
       // If the inputs are valid, close the dialogue and add the category.
