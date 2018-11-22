@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { css } from 'emotion/macro';
 import {
   Button, 
@@ -11,15 +11,19 @@ const container = css`
   padding-top: 10px;
 `;
 
-const Grade = (props) => {
-  let renderGrade = () => {
+class Grade extends Component {
+  constructor (props) {
+    super(props);
+  };
+
+  renderGrade = () => {
     var colors = ['#b2102f', '#ff9800', '#4caf50'];
 
     var displayColor = colors[0];
     return (
       <Button variant='contained' 
               style={{ background: displayColor, color: '#ffffff', fontFamily: 'Roboto',
-                       fontSize: 25, textAlign: 'justify', width: 250, height: 'auto',
+                       fontSize: 40, textAlign: 'justify', width: 250, height: 'auto',
                        borderRadius: '35px', cursor: 'default', marginBottom: 20 }}
               disableTouchRipple={true}>
       0.00%
@@ -27,16 +31,18 @@ const Grade = (props) => {
     )
   }
 
-  return (
-    <div className={container}>
-      <Typography variant='h6' color='inherit'>
-        CURRENT GRADE:
-      </Typography>
-      
-      {renderGrade()}
-
-    </div>
-  );
+  render() {
+    return (
+      <div className={container}>
+        <Typography variant='h5' color='inherit'>
+          CURRENT GRADE:
+        </Typography>
+        
+        {this.renderGrade()}
+  
+      </div>
+    );
+  }
 }
 
 export default Grade;

@@ -15,14 +15,55 @@ const app = css`
 
 class App extends Component {
   state = {
-
+    allCategories: [ ],
+    allData: { },
+    totalWeight: 0.0,
   }
 
-  handleAddCategory = () => {
+  handleAddCategory = (categoryName, categoryWeight) => {
+    const newWeight = this.state.totalWeight + categoryWeight;
+    const newCategories = [...this.state.allCategories, 
+                           {'name': categoryName,
+                            'weight': categoryWeight}
+                          ];
 
-    alert('Clicked!')
+    this.setState({
+      totalWeight: newWeight,
+      allCategories: newCategories,
+      allData: {
+        ...this.state.allData,
+        [categoryName] : [ ],
+      },
+    });
 
   };
+
+  addData = (categoryName, assignmentName, assignmentScore, assignmentMaxScore) => {
+    var currentData = this.state.allData[categoryName].slice();
+    var newAssignment = { assignmentName, assignmentScore, assignmentMaxScore }
+    currentData.push(newAssignment);
+
+    this.setState({
+      allData: {
+        ...this.state.allData,
+        [categoryName] : currentData,
+      },
+    });
+
+    console.log('Added the data!');
+  }
+
+  renderCategories = () => {
+    const categories = this.state.allCategories.slice();
+
+    return categories.map((category, index) => (
+      <Category key={index}
+          categoryName={category.name}
+          categoryWeight={category.weight}
+          dataSet={this.state.allData}
+          addData={this.addData}/>
+    ));
+  }
 
   render() {
     return (
@@ -33,10 +74,7 @@ class App extends Component {
         <Grade />
 
         <Grid style={{display: 'flex', flexWrap: 'wrap' }}>
-          <Category />
-          <Category />
-          <Category />
-          <Category />
+          {this.renderCategories()}
         </Grid>
 
       </div>
