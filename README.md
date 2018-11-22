@@ -18,8 +18,10 @@ Grade Calculator is still in its development phase, so there are many bugs withi
 
 ## Future plans:
 As you may have noticed, Grade Calculator is just a prototype. We plan to have the final version feature many more features.
+- Notification bars instead of pop-up alerts.
 - Deletion of categories.
 - Deletion of certain assignments in each category.
+- Adding more categories where it can exceed the weight of 100 (extra credit).
 - Editing the score & max score of each assignment.
 - Grading Calculator for different classes (interchangable screens).
 - Saving and loading up your grades (continually updating them).
