@@ -100,7 +100,7 @@ class AppHeader extends Component {
                         disableTouchRipple={true}>
                   <Typography variant='title' 
                               color='inherit'>
-                    Grade Calculator
+                    Grade Calculator (Beta)
                   </Typography>
                 </Button>
               </Grid>
