@@ -146,7 +146,12 @@ class Category extends Component {
 
   // --- HANDLING ADDING NEW ASSIGNMENT ---
   handleOpenNewData = () => {
-    this.setState( { openNewData: true } );
+    this.setState({
+      openNewData: true ,
+      newDataAssignment: '',
+      newDataScore: 0.0,
+      newDataMax: 0.0,
+    });
   }
 
   handleCloseNewData = () => {
