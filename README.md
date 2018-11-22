@@ -2,7 +2,7 @@
 A tool that provides students to calculate their current overall grade for a current class with ease. With each class having a unique grading scale, students may have a difficult time calculating their grade if no tools are provided. That's where Grade Calculator comes in! This tool is meant to be user-friendly, so it's the go-to tool use when it comes to grade calculation. In order for it to look 'decent,' Grade Calculator was built entirely with React.js. 
 
 
-Currently deployed at: https://grade-calculator.netlify.com/
+Currently deployed at: https://gradecalculator.dannyhp.com
 
 
 ### To start development:
