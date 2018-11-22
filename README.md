@@ -30,3 +30,7 @@ These are all bugs that have been identified and fixed within the application.
   - You can now view the application on mobile.
   - Minimizing your screen will correctly format the cards of each category.
 - Users were able to create a category and with a specific name and weight. Afterwards, if the user created another category with an empty name, the previous category's name and weight was used. Users cannot do this anymore (same issue with creating assignments (this was also fixed)).
+
+# Grade Calculator Timeline
+- November 21, 2018 - Application development started. Landing page was created and basic functionality was implmented. Prototype deployed to (https://grade-calculator.netlify.com).
+- November 22, 2018 - Application became fully responsive to all screen sizes (including mobile). Development for assignment/category deletion and modification started.
