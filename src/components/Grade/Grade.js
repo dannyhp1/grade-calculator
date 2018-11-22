@@ -69,14 +69,12 @@ class Grade extends Component {
   getBadges = () => {
     const categories = this.props.categories;
 
-    console.log(categories)
-
     const results = categories.map((data, index) => {
       if(data.weight < 30.00) {
         return (
           <Badge key={index} color="success">{data.name} ({data.weight}%)</Badge>
         );
-      } else if(data.weight >= 30.00 && data.weight <= 50.00) {
+      } else if(data.weight >= 30.00 && data.weight < 50.00) {
         return (
           <Badge key={index} color="info">{data.name} ({data.weight}%)</Badge>
         );
