@@ -19,13 +19,17 @@ class AppHeader extends Component {
     super(props);
     this.state = {
       categoryName: '',
-      categoryWeight: 0,
+      categoryWeight: 0.0,
       openNewCategory: false,
     };
   };
 
   handleOpenCategory = () => {
-    this.setState( { openNewCategory: true } )
+    this.setState({
+      openNewCategory: true ,
+      categoryName: '',
+      categoryWeight: 0.0,
+    })
   }
 
   handleCloseCategory = () => {
