@@ -4,10 +4,13 @@ import {
   Button, 
   Typography
 } from '@material-ui/core';
+import Badge from '../Badge/Badge.jsx';
+
 
 const container = css`
   display: inline;
   text-align: center;
+  font-family: 'Roboto';
   padding-top: 10px;
 `;
 
@@ -63,19 +66,36 @@ class Grade extends Component {
     return currentPercent;
   }
 
-  renderWeightBadges = () => {
+  getBadges = () => {
     const categories = this.props.categories;
-    var amountCategories = categories.length;
 
-    // Create a hash map to store the category and its scores.
-    var categoryScores = new Map();
+    console.log(categories)
 
-    for(var i = 0; i < amountCategories; ++i) {
-      categoryScores.set(categories[i].name, parseFloat(categories[i].weight));
-    }
+    const results = categories.map((data, index) => {
+      if(data.weight < 30.00) {
+        return (
+          <Badge key={index} color="success">{data.name} ({data.weight}%)</Badge>
+        );
+      } else if(data.weight >= 30.00 && data.weight <= 50.00) {
+        return (
+          <Badge key={index} color="info">{data.name} ({data.weight}%)</Badge>
+        );
+      } else {
+        return (
+          <Badge key={index} color="danger">{data.name} ({data.weight}%)</Badge>
+        );
+      }
+    });
 
+    return results;
+  }
 
-
+  renderWeightBadges = () => {
+    return(
+      <div>
+        {this.getBadges()}
+      </div>
+    );
   }
 
   renderGrade = () => {
@@ -116,8 +136,14 @@ class Grade extends Component {
           <strong>CURRENT GRADE:</strong>
         </Typography>
         
-        {this.renderGrade()}
-  
+        <div>
+          {this.renderGrade()}
+        </div>
+
+        <div>
+          {this.renderWeightBadges()}
+        </div>
+
       </div>
     );
   }
