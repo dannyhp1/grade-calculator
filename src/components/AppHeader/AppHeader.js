@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { css } from 'emotion/macro';
 import {
   Dialog,
   DialogTitle,
@@ -14,11 +13,6 @@ import {
   Grid,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-
-const header = css`
-  margin-bottom: 7%;
-  font-family: 'Roboto';
-`;
 
 class AppHeader extends Component {
   constructor (props) {
@@ -92,10 +86,10 @@ class AppHeader extends Component {
 
   render() {
     return (
-      <div className={header}>
-        <AppBar style={{ marginBottom: 10 }} 
-                color='primary' 
-                justify='space-between'>
+      <div style={{ fontFamily: 'Roboto' }}>
+        <AppBar color='primary' 
+                justify='space-between'
+                position="sticky">
           <Toolbar>
             <Grid container 
                   justify='space-between' 

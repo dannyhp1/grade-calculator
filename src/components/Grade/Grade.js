@@ -12,10 +12,6 @@ const container = css`
 `;
 
 class Grade extends Component {
-  constructor (props) {
-    super(props);
-  };
-
   getGrade = () => {
     const data = this.props.data;
     const categories = this.props.categories;
@@ -46,8 +42,8 @@ class Grade extends Component {
       var maxScore = 0;
       const amountAssignments = data[category].length;
 
-      for(var i = 0; i < amountAssignments; ++i) {
-        var current = data[category][i];
+      for(var j = 0; j < amountAssignments; ++j) {
+        var current = data[category][j];
         userScore += current.assignmentScore;
         maxScore += current.assignmentMaxScore;
       }
@@ -65,6 +61,21 @@ class Grade extends Component {
     }    
 
     return currentPercent;
+  }
+
+  renderWeightBadges = () => {
+    const categories = this.props.categories;
+    var amountCategories = categories.length;
+
+    // Create a hash map to store the category and its scores.
+    var categoryScores = new Map();
+
+    for(var i = 0; i < amountCategories; ++i) {
+      categoryScores.set(categories[i].name, parseFloat(categories[i].weight));
+    }
+
+
+
   }
 
   renderGrade = () => {
@@ -101,8 +112,8 @@ class Grade extends Component {
   render() {
     return (
       <div className={container}>
-        <Typography variant='h5' color='inherit'>
-          CURRENT GRADE:
+        <Typography style={{ marginTop: 20 }} variant='h5' color='inherit'>
+          <strong>CURRENT GRADE:</strong>
         </Typography>
         
         {this.renderGrade()}

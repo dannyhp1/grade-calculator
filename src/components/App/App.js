@@ -4,10 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grade from '../Grade/Grade';
 import AppHeader from '../AppHeader/AppHeader';
 import Category from '../Category/Category';
-
-import {
-  Grid,
-} from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
 const app = css`
   text-align: center;
@@ -73,11 +70,16 @@ class App extends Component {
                    addCategory={this.handleAddCategory}
                    currentWeight={this.state.totalWeight}/>
           
-        <Grade categories={this.state.allCategories} data={this.state.allData}/>
+        <div>
+          <Grade categories={this.state.allCategories} data={this.state.allData}/>
 
-        <Grid style={{display: 'flex', flexWrap: 'wrap' }}>
-          {this.renderCategories()}
-        </Grid>
+          <Grid style={{width: '100%',
+                        display: 'flex', 
+                        flexWrap: 'wrap',
+                        flexDirection: 'row'}}>
+            {this.renderCategories()}
+          </Grid>
+        </div>
 
       </div>
     );

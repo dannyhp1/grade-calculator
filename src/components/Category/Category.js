@@ -19,7 +19,7 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 
 var cardStyle = {
-  width: '450px',
+  //width: '350px',
   height: 'auto',
   margin: '15px 15px',
   transitionDuration: '0.3s',
@@ -84,14 +84,16 @@ class Category extends Component {
     const assignmentScore = parseFloat(this.state.newDataScore);
     const assignmentMaxScore = parseFloat(this.state.newDataMax);
 
-    console.log(this.props.currentCategories);
-
     if(assignmentName === '') {
       alert('You cannot add an assignment with an empty name!');
     } else if(assignmentScore < 0) {
       alert('You cannot get a negative score on your assignment!');
     } else if(assignmentMaxScore < 0) {
       alert('The assignment cannot be worth less than 0 points!');
+    } else if(isNaN(assignmentScore)) {
+      alert('You must specify a score you received on this assignment.');
+    } else if(isNaN(assignmentMaxScore)) {
+      alert('You must specify the maximum score on this assignment.');
     } else {
       this.handleCloseData();
       this.props.addData(this.state.categoryName, assignmentName, assignmentScore, assignmentMaxScore);
@@ -116,12 +118,12 @@ class Category extends Component {
                 <AddIcon style={{ color: '#2979ff' }}/>
               </Button>
             </Grid>
-            <Table style={{ width: 400, display: 'block' }}>
+            <Table style={{ width: 350, display: 'block' }}>
               <TableHead>
                 <TableRow>
                   <TableCell>Assignment</TableCell>
                   <TableCell numeric>Score</TableCell>
-                  <TableCell numeric>Maximum Score</TableCell>
+                  <TableCell numeric>Max Score</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
