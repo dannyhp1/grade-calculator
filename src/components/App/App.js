@@ -54,11 +54,13 @@ class App extends Component {
     const categories = this.state.allCategories.slice();
 
     return categories.map((category, index) => (
-      <Category key={index}
-          categoryName={category.name}
-          categoryWeight={category.weight}
-          dataSet={this.state.allData}
-          addData={this.addData}/>
+      <Grid item lg={4} key={index} style={{direction: 'column'}}>
+        <Category
+            categoryName={category.name}
+            categoryWeight={category.weight}
+            dataSet={this.state.allData}
+            addData={this.addData}/>
+      </Grid>
     ));
   }
 
@@ -73,10 +75,11 @@ class App extends Component {
         <div>
           <Grade categories={this.state.allCategories} data={this.state.allData}/>
 
-          <Grid style={{width: '100%',
-                        display: 'flex', 
-                        flexWrap: 'wrap',
-                        flexDirection: 'row'}}>
+          <Grid container spacing={24} style={{
+                          justify: 'center',
+                          display: 'flex', 
+                          flexWrap: 'wrap',
+                          flexDirection: 'row'}}>
             {this.renderCategories()}
           </Grid>
         </div>
