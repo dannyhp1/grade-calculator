@@ -11,26 +11,36 @@ const app = css`
 `;
 
 class App extends Component {
-  state = {
-    allCategories: [ ],
-    allData: { },
-    totalWeight: 0.0,
-  }
+  constructor (props) {
+    super(props);
+    this.state = this.getInitialState();
+  };
 
-  handleAddCategory = (categoryName, categoryWeight) => {
+  getInitialState() {
+    const categories = new Map();
+    const data = new Map();
+
+    const initialState = {
+      categories: categories,
+      data: data,
+      totalWeight: 0.0,
+    }
+
+    return initialState;
+  };
+
+  addCategory = (categoryName, categoryWeight) => {
     const newWeight = this.state.totalWeight + categoryWeight;
-    const newCategories = [...this.state.allCategories, 
-                           {'name': categoryName,
-                            'weight': categoryWeight}
-                          ];
+    const newCategories = new Map(this.state.categories);
+    const newData = new Map(this.state.data);
+
+    newCategories.set(categoryName, categoryWeight);
+    newCategories.set(categoryName, [ ]);
 
     this.setState({
       totalWeight: newWeight,
-      allCategories: newCategories,
-      allData: {
-        ...this.state.allData,
-        [categoryName] : [ ],
-      },
+      categories: newCategories,
+      data: newData,
     });
 
   };
@@ -46,8 +56,10 @@ class App extends Component {
         [categoryName] : currentData,
       },
     });
+  }
 
-    console.log('Added the data!');
+  modifyData = (categoryName, currentName, currentScore, currentMax, newName, newScore, newMax) => {
+    console.log(categoryName, currentName, currentScore, currentMax, newName, newScore, newMax);
   }
 
   renderCategories = () => {
@@ -59,20 +71,22 @@ class App extends Component {
             categoryName={category.name}
             categoryWeight={category.weight}
             dataSet={this.state.allData}
-            addData={this.addData}/>
+            addData={this.addData}
+            modifyData={this.modifyData}/>
       </Grid>
     ));
   }
 
   render() {
+    console.log(this.state);
     return (
       <div className={app}>
         <CssBaseline />
-        <AppHeader currentCategories={this.state.allCategories} 
-                   addCategory={this.handleAddCategory}
+        <AppHeader addCategory={this.addCategory}
+                   categories={this.state.categories} 
                    currentWeight={this.state.totalWeight}/>
           
-        <div>
+        {/* <div>
           <Grade categories={this.state.allCategories} data={this.state.allData}/>
 
           <Grid container spacing={24} style={{
@@ -82,7 +96,7 @@ class App extends Component {
                           flexDirection: 'row'}}>
             {this.renderCategories()}
           </Grid>
-        </div>
+        </div> */}
 
       </div>
     );

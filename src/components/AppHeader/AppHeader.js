@@ -29,11 +29,13 @@ class AppHeader extends Component {
       openNewCategory: true ,
       categoryName: '',
       categoryWeight: 0.0,
-    })
+    });
   }
 
   handleCloseCategory = () => {
-    this.setState( { openNewCategory: false } )
+    this.setState({
+      openNewCategory: false 
+    });
   }
 
   handleChange = (e, field) => {
@@ -50,41 +52,26 @@ class AppHeader extends Component {
   }
 
   checkCategoryFields = () => {
-    const categoryName = this.state.categoryName.trim();
+    const categoryName = this.state.categoryName.trim().toLowerCase();
     const categoryWeight = parseFloat(this.state.categoryWeight);
 
-    // Check to see if the categoryName field is empty or not.
     if(categoryName === '') {
-      // Change this to an error notification bar in the future. [TODO]
       alert('You cannot add a category with an empty name!');
     } else if(categoryWeight <= 0 || categoryWeight > 100) {
       alert('Your category weight can only be between 1 and 100!');
+    } else if(this.props.categories.get(categoryName) !== undefined) {
+      alert('You already have a category named "' + categoryName + '". You cannot have two categories with the same name!');
     } else {
-      // Check to see if there's another category with the same name. If there is,
-      // they cannot proceed. [TODO - convert array to HashMap for easier access].
-      
-      /* CHANGE IMPLEMENTATION OF THIS FOR IT TO BE FASTER! CHANGE THE DATA STRUCTURE
-      IN APP.JS WHERE this.props.currentCategories IS A HASHMAP INSTEAD. */
-      var amountCategories = this.props.currentCategories.length;
-      for(var i = 0; i < amountCategories; ++i) {
-        if(this.props.currentCategories[i].name === categoryName) {
-          alert('You already have a category named "' + categoryName + '". You must change the current category name before proceeding.');
-          return;
-        }
-      }
-
-      // Check to see if the weight will be over 100 when this category is added.
-      // If it is, this shouldn't be valid!
-      var combinedWeight = categoryWeight + this.props.currentWeight;
-      if(combinedWeight > 100.00) {
+      /* Check to see if the weight will be over 100 when category is added (not valid).
+      Future implementation: extra credit available! */
+      const combineWeight = categoryWeight + this.props.currentWeight;
+      if(combineWeight > 100.00) {
         var maximumWeight = 100.00 - this.props.currentWeight;
-        alert(categoryName + ' cannot have a weight of ' + categoryWeight + '. The maximum weight you can give this category is: ' + maximumWeight);
-        return;
+        alert(categoryName + ' cannot have a weight of ' + categoryWeight + ' because your weight total will be ' + combineWeight + ' (maximum is 100). The maximum weight for this category can be ' + maximumWeight + '.');
+      } else {
+        this.handleCloseCategory();
+        this.props.addCategory(categoryName, categoryWeight);
       }
-
-      // If the inputs are valid, close the dialogue and add the category.
-      this.handleCloseCategory();
-      this.props.addCategory(categoryName, categoryWeight);
     }
   }
 

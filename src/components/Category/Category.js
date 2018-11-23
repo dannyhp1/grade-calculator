@@ -120,8 +120,8 @@ class Category extends Component {
   submitChanges = (request) => {
     switch(request) {
       case 'delete':
-        // console.log('You want to delete assignmentName: ' + this.state.selectedDataAssignment);
         // Delete assignment here.
+        this.handleCloseCurrentData();
         break;
       case 'change':
         // If absolutely no changes were made and the user just clicked save, don't do anything.
@@ -130,9 +130,11 @@ class Category extends Component {
            parseFloat(this.state.selectedDataMax) === parseFloat(this.state.selectedDataNewMax)) {
           this.handleCloseCurrentData();
         } else {
-          // Handle changes here!
           if(this.verifyChanges(this.state.selectedDataNewName, this.state.selectedDataNewScore, this.state.selectedDataNewMax)) {
-            // The changes are valid!
+            this.props.modifyData(this.state.categoryName,
+                                  this.state.selectedDataAssignment, this.state.selectedDataScore,
+                                  this.state.selectedDataMax, this.state.selectedDataNewName,
+                                  this.state.selectedDataNewScore, this.state.selectedDataNewMax);
             this.handleCloseCurrentData();
           }
         }
