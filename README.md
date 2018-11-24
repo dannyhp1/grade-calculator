@@ -17,10 +17,9 @@ Grade Calculator is still in its development phase, so there are many bugs withi
 ## Future plans:
 As you may have noticed, Grade Calculator is just a prototype. We plan to have the final version feature many more features.
 - Notification bars instead of pop-up alerts.
-- Deletion of categories.
-- Deletion of certain assignments in each category.
+- Deletion of categories. (WIP)
+- Disabling certain assignments (where the grade from that assignment will not count).
 - Adding more categories where it can exceed the weight of 100 (extra credit).
-- Editing the score & max score of each assignment.
 - Grading Calculator for different classes (interchangable grading scales).
 - Saving and loading up your grades (continually updating them).
 
@@ -34,3 +33,4 @@ These are all bugs that have been identified and fixed within the application.
 ## Grade Calculator Timeline
 - November 21, 2018 - Application development started. Landing page was created and basic functionality was implemented. Prototype deployed to (https://grade-calculator.netlify.com).
 - November 22, 2018 - Application became fully responsive to all screen sizes (including mobile). Development for assignment/category deletion and modification started.
+- November 23, 2018 - Implemented the functionality for users to modify assignment details (you can change the assignment name, score or max score) for any assignment in any category. The grade calculation will continue to update!
