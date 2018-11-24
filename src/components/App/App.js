@@ -21,6 +21,7 @@ class App extends Component {
     const data = new Map();
 
     const initialState = {
+      categoryID: 0,
       categories: categories,
       data: data,
       totalWeight: 0.0,
