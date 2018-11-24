@@ -14,81 +14,80 @@ const container = css`
   padding-top: 10px;
 `;
 
-class Grade extends Component {
+class Grade extends Component {  
   getGrade = () => {
     const data = this.props.data;
     const categories = this.props.categories;
-    var amountCategories = categories.length;
 
-    // Create a hash map to store the category and its scores.
-    var categoryScores = new Map();
-    
-    // Total percent available (not always 100%).
     var totalWeight = 0.0;
-
-    // The amount that the user has (relative to totalWeight).
     var userWeight = 0.0;
-
-    // This is your current grade percent.
     var currentPercent = 0.0;
 
-    for(var i = 0; i < amountCategories; ++i) {
-      categoryScores.set(categories[i].name, parseFloat(categories[i].weight));
-      // If the category is there, but there are no assignments in them. Don't count it.
-      if(data[categories[i].name].length > 0) {
-        totalWeight += parseFloat(categories[i].weight);
+    for(var [category, weight] of categories) {
+      /* If the category has assignments in it, take it under consideration. */
+      const categoryData = data.get(category);
+      const assignmentsAmount = categoryData.size;
+      if(assignmentsAmount > 0) {
+        totalWeight += parseFloat(weight);
+
+        var userScore = 0;
+        var maxScore = 0;
+        
+        for(var [id, assignmentDetails ] of categoryData) {
+          userScore += assignmentDetails.assignmentScore;
+          maxScore += assignmentDetails.assignmentMaxScore;
+        }
+
+        const categoryScore = parseFloat(userScore) / parseFloat(maxScore);
+        if(!isNaN(categoryScore)) {
+          const calculatedScore = categoryScore * parseFloat(weight);
+          userWeight += calculatedScore;
+        }
       }
     }
 
-    for (var [category, weight] of categoryScores) {
-      var userScore = 0;
-      var maxScore = 0;
-      const amountAssignments = data[category].length;
-
-      for(var j = 0; j < amountAssignments; ++j) {
-        var current = data[category][j];
-        userScore += current.assignmentScore;
-        maxScore += current.assignmentMaxScore;
-      }
-
-      var currentCategoryScore = parseFloat(userScore)/parseFloat(maxScore);
-      if(!isNaN(currentCategoryScore)) {
-        var calculatedScore = currentCategoryScore * parseFloat(weight);
-        userWeight += calculatedScore
-      }
-    }
-
-    var decimalScore = (userWeight / totalWeight);
+    const decimalScore = parseFloat(userWeight) / parseFloat(totalWeight);
     if(!isNaN(decimalScore)) {
       currentPercent = decimalScore * 100;
-    }    
+    }
 
     return currentPercent;
   }
 
   getBadges = () => {
+    var badgeData = [ ]
     const categories = this.props.categories;
 
-    const results = categories.map((data, index) => {
+    for(var [category, weight] of categories) {
+      badgeData.push({name: category, weight: weight});
+    }
+
+    const badge = badgeData.map((data, index) => {
       if(data.weight < 30.00) {
         return (
-          <Badge key={index} color="success">{data.name} ({data.weight}%)</Badge>
+          <Badge key={index} color="success">
+            {data.name} ({data.weight}%)
+          </Badge>
         );
       } else if(data.weight >= 30.00 && data.weight < 50.00) {
         return (
-          <Badge key={index} color="info">{data.name} ({data.weight}%)</Badge>
+          <Badge key={index} color="info">
+            {data.name} ({data.weight}%)
+          </Badge>
         );
       } else {
         return (
-          <Badge key={index} color="danger">{data.name} ({data.weight}%)</Badge>
+          <Badge key={index} color="danger">
+            {data.name} ({data.weight}%)
+          </Badge>
         );
       }
     });
 
-    return results;
+    return badge;
   }
 
-  renderWeightBadges = () => {
+  renderBadges = () => {
     return(
       <div>
         {this.getBadges()}
@@ -97,11 +96,10 @@ class Grade extends Component {
   }
 
   renderGrade = () => {
+    /* Colors go in the order of: red, orange, green, dark green.
+    Percentiles are from: (0.00 - 69.99, 70.00 - 79.99, 80.00 - 89.99, 90.00+) */
+    const colors = ['#b2102f', '#ff9800', '#4caf50', '#357a38'];
     const currentGrade = this.getGrade();
-
-    // Colors go in the order of: red, orange, green, dark green.
-    // Percentiles are from: (0.00 - 69.99, 70.00 - 79.99, 80.00 - 89.99, 90.00+)
-    var colors = ['#b2102f', '#ff9800', '#4caf50', '#357a38'];
     var displayColor = '';
 
     if(currentGrade < 70.00) {
@@ -114,6 +112,7 @@ class Grade extends Component {
       displayColor = colors[3];
     }
 
+    /* Show the grade rounded by 2 decimal places. */
     const displayGrade = currentGrade.toFixed(2);
 
     return (
@@ -139,7 +138,7 @@ class Grade extends Component {
         </div>
 
         <div>
-          {this.renderWeightBadges()}
+          {this.renderBadges()}
         </div>
 
       </div>

@@ -35,7 +35,7 @@ class App extends Component {
     const newData = new Map(this.state.data);
 
     newCategories.set(categoryName, categoryWeight);
-    newCategories.set(categoryName, [ ]);
+    newData.set(categoryName, new Map());
 
     this.setState({
       totalWeight: newWeight,
@@ -45,32 +45,37 @@ class App extends Component {
 
   };
 
-  addData = (categoryName, assignmentName, assignmentScore, assignmentMaxScore) => {
-    var currentData = this.state.allData[categoryName].slice();
-    var newAssignment = { assignmentName, assignmentScore, assignmentMaxScore }
-    currentData.push(newAssignment);
+  addData = (categoryName, assignmentID, assignmentName, assignmentScore, assignmentMaxScore) => {
+    var categoryData = this.state.data;
+    var currentData = categoryData.get(categoryName);
+    var newAssignmentInformation = { assignmentName: assignmentName, 
+                                     assignmentScore: assignmentScore, 
+                                     assignmentMaxScore: assignmentMaxScore }
+    currentData.set(assignmentID, newAssignmentInformation);
+    categoryData.set(categoryName, currentData);
 
     this.setState({
-      allData: {
-        ...this.state.allData,
-        [categoryName] : currentData,
-      },
+      data: categoryData
     });
   }
 
-  modifyData = (categoryName, currentName, currentScore, currentMax, newName, newScore, newMax) => {
+  modifyData = (categoryName, currentID, currentName, currentScore, currentMax, newName, newScore, newMax) => {
     console.log(categoryName, currentName, currentScore, currentMax, newName, newScore, newMax);
   }
 
   renderCategories = () => {
-    const categories = this.state.allCategories.slice();
+    const categories = [ ]
+
+    for(var [category, weight] of this.state.categories) {
+      categories.push({name: category, weight: weight});
+    }
 
     return categories.map((category, index) => (
       <Grid item lg={4} key={index} style={{direction: 'column'}}>
         <Category
             categoryName={category.name}
             categoryWeight={category.weight}
-            dataSet={this.state.allData}
+            data={this.state.data.get(category.name)}
             addData={this.addData}
             modifyData={this.modifyData}/>
       </Grid>
@@ -86,17 +91,17 @@ class App extends Component {
                    categories={this.state.categories} 
                    currentWeight={this.state.totalWeight}/>
           
-        {/* <div>
-          <Grade categories={this.state.allCategories} data={this.state.allData}/>
-
-          <Grid container spacing={24} style={{
-                          justify: 'center',
-                          display: 'flex', 
-                          flexWrap: 'wrap',
-                          flexDirection: 'row'}}>
+        <Grade categories={this.state.categories} data={this.state.data}/>
+        
+        <div>
+          <Grid container spacing={24} 
+                style={{ justify: 'center',
+                         display: 'flex', 
+                         flexWrap: 'wrap',
+                         flexDirection: 'row' }}>
             {this.renderCategories()}
           </Grid>
-        </div> */}
+        </div>
 
       </div>
     );
