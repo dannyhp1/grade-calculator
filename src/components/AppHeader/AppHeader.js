@@ -19,7 +19,7 @@ class AppHeader extends Component {
     super(props);
     this.state = {
       categoryName: '',
-      categoryWeight: 0.0,
+      categoryWeight: '',
       openNewCategory: false,
     };
   };
@@ -28,7 +28,7 @@ class AppHeader extends Component {
     this.setState({
       openNewCategory: true ,
       categoryName: '',
-      categoryWeight: 0.0,
+      categoryWeight: '',
     });
   }
 
@@ -36,6 +36,12 @@ class AppHeader extends Component {
     this.setState({
       openNewCategory: false 
     });
+  }
+
+  handleKeyPress = (e) => {
+    if(e.key === 'Enter') {
+      this.checkCategoryFields();
+    }
   }
 
   handleChange = (e, field) => {
@@ -57,8 +63,10 @@ class AppHeader extends Component {
 
     if(categoryName === '') {
       alert('You cannot add a category with an empty name!');
+    } if(isNaN(categoryWeight)) {
+      alert('You must specify a weight for the category!');
     } else if(categoryWeight <= 0 || categoryWeight > 100) {
-      alert('Your category weight can only be between 1 and 100!');
+      alert('Your category can only have a weight between 1 and 100!');
     } else if(this.props.categories.get(categoryName) !== undefined) {
       alert('You already have a category named "' + categoryName + '". You cannot have two categories with the same name!');
     } else {
@@ -127,6 +135,7 @@ class AppHeader extends Component {
               type="text"
               required={true}
               onChange={(e) => this.handleChange(e, 'categoryName')}
+              onKeyPress={(e) => this.handleKeyPress(e)}
               fullWidth
             />
             <TextField
@@ -137,6 +146,7 @@ class AppHeader extends Component {
               inputProps={{ min: '1', max: '100', step: '0.5' }}
               required={true}
               onChange={(e) => this.handleChange(e, 'categoryWeight')}
+              onKeyPress={(e) => this.handleKeyPress(e)}
               fullWidth
             />
           </DialogContent>

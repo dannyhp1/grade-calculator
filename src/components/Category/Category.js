@@ -83,6 +83,21 @@ class Category extends Component {
     ));
   }
 
+  handleKeyPress = (e, action) => {
+    if(e.key === 'Enter') {
+      switch(action) {
+        case 'addNewData':
+          this.checkNewData();
+          break;
+        case 'changeCurrentData':
+          this.submitChanges('change');
+          break;
+        default:
+          break;
+      }
+    }
+  }
+
   /* Start of opening new data dialog (to create more data). */
   openNewDataDialog = () => {
     this.setState({
@@ -289,6 +304,7 @@ class Category extends Component {
               type="text"
               required={true}
               onChange={(e) => this.changeNewData(e, 'assignmentName')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'addNewData')}
               fullWidth
             />
             <TextField
@@ -299,6 +315,7 @@ class Category extends Component {
               inputProps={{ min: '0', step: '0.5' }}
               required={true}
               onChange={(e) => this.changeNewData(e, 'assignmentScore')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'addNewData')}
               fullWidth
             />
             <TextField
@@ -309,6 +326,7 @@ class Category extends Component {
               inputProps={{ min: '0', step: '0.5' }}
               required={true}
               onChange={(e) => this.changeNewData(e, 'assignmentMaxScore')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'addNewData')}
               fullWidth
             />
           </DialogContent>
@@ -342,6 +360,7 @@ class Category extends Component {
               value={this.state.currentDataNewName}
               required={true}
               onChange={(e) => this.changeCurrentData(e, 'assignmentName')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'changeCurrentData')}
               fullWidth
             />
             <TextField
@@ -353,6 +372,7 @@ class Category extends Component {
               value={this.state.currentDataNewScore}
               required={true}
               onChange={(e) => this.changeCurrentData(e, 'assignmentScore')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'changeCurrentData')}
               fullWidth
             />
             <TextField
@@ -364,6 +384,7 @@ class Category extends Component {
               value={this.state.currentDataNewMax}
               required={true}
               onChange={(e) => this.changeCurrentData(e, 'assignmentMaxScore')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'changeCurrentData')}
               fullWidth
             />
           </DialogContent>
