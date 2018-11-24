@@ -60,7 +60,31 @@ class App extends Component {
   }
 
   modifyData = (categoryName, currentID, currentName, currentScore, currentMax, newName, newScore, newMax) => {
-    console.log(categoryName, currentName, currentScore, currentMax, newName, newScore, newMax);
+    var categoryData = this.state.data;
+    var currentCategory = categoryData.get(categoryName);
+    var dataInformation = currentCategory.get(currentID);
+    dataInformation.assignmentName = newName;
+    dataInformation.assignmentScore = newScore;
+    dataInformation.assignmentMaxScore = newMax;
+
+    currentCategory.set(currentID, dataInformation);
+    categoryData.set(categoryName, currentCategory);
+
+    this.setState({
+      data: categoryData
+    });
+  }
+
+  deleteData = (categoryName, currentID) => {
+    var categoryData = this.state.data;
+    var currentCategory = categoryData.get(categoryName);
+    currentCategory.delete(currentID);
+
+    categoryData.set(categoryName, currentCategory);
+
+    this.setState({
+      data: categoryData
+    });
   }
 
   renderCategories = () => {
@@ -77,13 +101,13 @@ class App extends Component {
             categoryWeight={category.weight}
             data={this.state.data.get(category.name)}
             addData={this.addData}
-            modifyData={this.modifyData}/>
+            modifyData={this.modifyData}
+            deleteData={this.deleteData}/>
       </Grid>
     ));
   }
 
   render() {
-    console.log(this.state);
     return (
       <div className={app}>
         <CssBaseline />

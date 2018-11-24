@@ -42,6 +42,7 @@ class Category extends Component {
       newDataMax: 0.0,
 
       openCurrentData: false,
+      currentDataID: -1,
       currentDataName: '',
       currentDataScore: 0.0,
       currentDataMax: 0.0,
@@ -139,9 +140,10 @@ class Category extends Component {
   /* End of opening new data dialog (to create more data). */
 
   /* Start of opening current data dialog (to modify or delete). */
-  openCurrentDataDialog = (assignmentName, assignmentScore, assignmentMax) => {
+  openCurrentDataDialog = (assignmentID, assignmentName, assignmentScore, assignmentMax) => {
     this.setState({ 
       openCurrentData: true,
+      currentDataID: assignmentID,
       currentDataName: assignmentName,
       currentDataScore: assignmentScore,
       currentDataMax: assignmentMax,
@@ -171,7 +173,19 @@ class Category extends Component {
     }
   }
 
-  verifyCurrentData = (assignmentName, assignmentScore, assignmentMaxScore) => {
+  checkNoChanges = () => {
+    /* Returns true if no changes were made. */
+    return (this.state.currentDataName === this.state.currentDataNewName &&
+            parseFloat(this.state.currentDataScore) === parseFloat(this.state.currentDataNewScore) &&
+            parseFloat(this.state.currentDataMax) === parseFloat(this.state.currentDataNewMax))
+  }
+  
+
+  verifyCurrentData = () => {
+    const assignmentName = this.state.currentDataNewName;
+    const assignmentScore = this.state.currentDataNewScore;
+    const assignmentMaxScore = this.state.currentDataNewMax;
+
     if(assignmentName === '') {
       alert('You cannot leave the assignment name empty!');
       return false;
@@ -195,25 +209,26 @@ class Category extends Component {
   submitChanges = (request) => {
     switch(request) {
       case 'delete':
-        // Delete assignment here.
+        /* Possible future implementation: confirmation to delete assignment? */
+        this.props.deleteData(this.state.categoryName, this.state.currentDataID);
         this.closeCurrentDataDialog();
         break;
       case 'change':
-        // If absolutely no changes were made and the user just clicked save, don't do anything.
-        if(this.state.currentDataName === this.state.currentDataNewName &&
-           parseFloat(this.state.currentDataScore) === parseFloat(this.state.currentDataNewScore) &&
-           parseFloat(this.state.currentDataMax) === parseFloat(this.state.currentDataNewMax)) {
+        if(this.checkNoChanges()) {
           this.closeCurrentDataDialog();
         } else {
-          if(this.verifyCurrentData(this.state.currentDataNewName, this.state.currentDataNewScore, this.state.currentDataNewMax)) {
+          if(this.verifyCurrentData()) {
             this.props.modifyData(this.state.categoryName,
-                                  this.state.currentDataName, this.state.currentDataScore,
-                                  this.state.currentDataMax, this.state.currentDataNewName,
-                                  this.state.currentDataNewScore, this.state.currentDataNewMax);
+                                  this.state.currentDataID,
+                                  this.state.currentDataName,
+                                  this.state.currentDataScore,
+                                  this.state.currentDataMax,
+                                  this.state.currentDataNewName,
+                                  this.state.currentDataNewScore, 
+                                  this.state.currentDataNewMax);
             this.closeCurrentDataDialog();
           }
         }
-
         break;
       default:
         break;

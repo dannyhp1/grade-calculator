@@ -34,8 +34,8 @@ class Grade extends Component {
         var maxScore = 0;
         
         for(var [id, assignmentDetails ] of categoryData) {
-          userScore += assignmentDetails.assignmentScore;
-          maxScore += assignmentDetails.assignmentMaxScore;
+          userScore += parseFloat(assignmentDetails.assignmentScore);
+          maxScore += parseFloat(assignmentDetails.assignmentMaxScore);
         }
 
         const categoryScore = parseFloat(userScore) / parseFloat(maxScore);
