@@ -96,20 +96,24 @@ class Grade extends Component {
   }
 
   renderGrade = () => {
-    /* Colors go in the order of: red, orange, green, dark green.
-    Percentiles are from: (0.00 - 69.99, 70.00 - 79.99, 80.00 - 89.99, 90.00+) */
-    const colors = ['#b2102f', '#ff9800', '#4caf50', '#357a38'];
+    /* Colors go in the order of: dark red, red, orange, light green, green, dark green.
+    Percentiles are from: (0.00 - 59.99, 60.00 - 69.99, 70.00 - 79.99, 80.00 - 89.99, 90.00 - 100.00, 100.01+) */
+    const colors = ['#aa2e25', '#f44336', '#ff9800', '#6fbf73', '#4caf50', '#357a38'];
     const currentGrade = this.getGrade();
     var displayColor = '';
 
-    if(currentGrade < 70.00) {
+    if(currentGrade < 60.00) {
       displayColor = colors[0];
-    } else if(currentGrade >= 70.00 && currentGrade < 80.00) {
+    } else if(currentGrade >= 60.00 && currentGrade < 70.00) {
       displayColor = colors[1];
-    } else if(currentGrade >= 80.00 && currentGrade < 90.00) {
+    } else if(currentGrade >= 70.00 && currentGrade < 80.00) {
       displayColor = colors[2];
-    } else {
+    } else if(currentGrade >= 80.00 && currentGrade < 90.00) {
       displayColor = colors[3];
+    } else if(currentGrade >= 90.00 && currentGrade <= 100.00) {
+      displayColor = colors[4];
+    } else {
+      displayColor = colors[5];
     }
 
     /* Show the grade rounded by 2 decimal places. */
