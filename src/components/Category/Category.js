@@ -335,7 +335,7 @@ class Category extends Component {
         break;
       case 'change':
         if(this.verifyCurrentData()) {
-          this.props.modifyData(this.state.categoryName,
+          this.props.modifyData(this.getCategoryName(),
                                 this.state.currentDataID,
                                 this.state.currentDataName,
                                 this.state.currentDataScore,
