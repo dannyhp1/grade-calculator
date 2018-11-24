@@ -35,13 +35,14 @@ class App extends Component {
     const newCategories = new Map(this.state.categories);
     const newData = new Map(this.state.data);
 
-    newCategories.set(categoryName, categoryWeight);
+    newCategories.set(this.state.categoryID, { name: categoryName, weight: categoryWeight });
     newData.set(categoryName, new Map());
 
     this.setState({
       totalWeight: newWeight,
       categories: newCategories,
       data: newData,
+      categoryID: this.state.categoryID + 1
     });
 
   };
@@ -91,13 +92,14 @@ class App extends Component {
   renderCategories = () => {
     const categories = [ ]
 
-    for(var [category, weight] of this.state.categories) {
-      categories.push({name: category, weight: weight});
+    for(var [categoryID, categoryData] of this.state.categories) {
+      categories.push({id: categoryID, name: categoryData.name, weight: categoryData.weight});
     }
 
     return categories.map((category, index) => (
       <Grid item lg={4} key={index} style={{direction: 'column'}}>
         <Category
+            categoryID={category.id}
             categoryName={category.name}
             categoryWeight={category.weight}
             data={this.state.data.get(category.name)}

@@ -23,7 +23,10 @@ class Grade extends Component {
     var userWeight = 0.0;
     var currentPercent = 0.0;
 
-    for(var [category, weight] of categories) {
+    for(var [categoryID, categoryData] of categories) {
+      const category = categoryData.name;
+      const weight= categoryData.weight;
+      
       /* If the category has assignments in it, take it under consideration. */
       const categoryData = data.get(category);
       const assignmentsAmount = categoryData.size;
@@ -58,8 +61,8 @@ class Grade extends Component {
     var badgeData = [ ]
     const categories = this.props.categories;
 
-    for(var [category, weight] of categories) {
-      badgeData.push({name: category, weight: weight});
+    for(var [categoryID, categoryData] of categories) {
+      badgeData.push({name: categoryData.name, weight: categoryData.weight});
     }
 
     const badge = badgeData.map((data, index) => {

@@ -17,6 +17,7 @@ import {
   DialogActions,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 
 var cardStyle = {
   height: 'auto',
@@ -34,6 +35,7 @@ class Category extends Component {
     const initialState = {
       assignmentID: 0,
 
+      categoryyID: this.props.categoryID,
       categoryName: this.props.categoryName,
       categoryWeight: this.props.categoryWeight,
       openNewData: false,
@@ -265,8 +267,9 @@ class Category extends Component {
                       disableTouchRipple={true}>
                   {this.state.categoryName} ({this.state.categoryWeight}%)
               </Button>
-              <Button onClick={this.openNewDataDialog} style={{ height: 40 }}>
-                <AddIcon style={{ color: '#2979ff' }}/>
+              <Button style={{ height: 40 }}
+                      onClick={this.openNewDataDialog}>
+                <AddIcon style={{ height: 'auto', padding: 0, margin: 0, color: '#2979ff'}} />
               </Button>
             </Grid>
             <Table style={{ width: 350, display: 'block' }}>
