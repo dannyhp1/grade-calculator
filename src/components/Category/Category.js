@@ -17,7 +17,6 @@ import {
   DialogActions,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
 
 var cardStyle = {
   height: 'auto',
@@ -31,13 +30,22 @@ class Category extends Component {
     this.state = this.getState();
   };
 
-  getState() {
+  getState = () => {
+    const name = this.getCategoryName();
+    const weight = this.getCategoryWeight();
+    const id = this.getCategoryID();
+
     const initialState = {
       assignmentID: 0,
 
-      categoryyID: this.props.categoryID,
-      categoryName: this.props.categoryName,
-      categoryWeight: this.props.categoryWeight,
+      openCurrentCategory: false,
+      openConfirmDeleteCategory: false,
+      categoryID: id,
+      categoryName: name,
+      categoryWeight: weight,
+      newCategoryName: '',
+      newCategoryWeight: 0.0,
+
       openNewData: false,
       newDataName: '',
       newDataScore: 0.0,
@@ -55,34 +63,50 @@ class Category extends Component {
     return initialState;
   }
 
+  getCategoryName = () => {
+    const currentCategory = this.props.categories.get(this.props.categoryID);
+    return currentCategory.name;
+  }
+
+  getCategoryWeight = () => {
+    const currentCategory = this.props.categories.get(this.props.categoryID);
+    return currentCategory.weight;
+  }
+
+  getCategoryID = () => {
+    return this.props.categoryMapping.get(this.getCategoryName());
+  }
+
   renderData = () => {
     var dataSet = [ ];
     var categoryData = this.props.data;
 
-    for(var [id, assignmentDetails ] of categoryData) {
-      dataSet.push({ assignmentID: id, 
-                     assignmentName: assignmentDetails.assignmentName,
-                     assignmentScore: assignmentDetails.assignmentScore,
-                     assignmentMaxScore: assignmentDetails.assignmentMaxScore });
+    if(categoryData !== undefined) {
+      for(var [id, assignmentDetails ] of categoryData) {
+        dataSet.push({ assignmentID: id, 
+                       assignmentName: assignmentDetails.assignmentName,
+                       assignmentScore: assignmentDetails.assignmentScore,
+                       assignmentMaxScore: assignmentDetails.assignmentMaxScore });
+      }
+  
+      return dataSet.map((data, index) => (
+        <TableRow onClick={() => this.openCurrentDataDialog(data.assignmentID,
+                                                            data.assignmentName, 
+                                                            data.assignmentScore, 
+                                                            data.assignmentMaxScore)} 
+                  style={{cursor: 'pointer'}} key={index}>
+          <TableCell>
+            {data.assignmentName}
+          </TableCell>
+          <TableCell numeric>
+            {data.assignmentScore}
+          </TableCell>
+          <TableCell numeric>
+            {data.assignmentMaxScore}
+          </TableCell>
+        </TableRow>
+      ));
     }
-
-    return dataSet.map((data, index) => (
-      <TableRow onClick={() => this.openCurrentDataDialog(data.assignmentID,
-                                                          data.assignmentName, 
-                                                          data.assignmentScore, 
-                                                          data.assignmentMaxScore)} 
-                style={{cursor: 'pointer'}} key={index}>
-        <TableCell>
-          {data.assignmentName}
-        </TableCell>
-        <TableCell numeric>
-          {data.assignmentScore}
-        </TableCell>
-        <TableCell numeric>
-          {data.assignmentMaxScore}
-        </TableCell>
-      </TableRow>
-    ));
   }
 
   handleKeyPress = (e, action) => {
@@ -94,16 +118,99 @@ class Category extends Component {
         case 'changeCurrentData':
           this.submitChanges('change');
           break;
+        case 'changeCategory':
+          this.modifyCategory();
+          break;
         default:
           break;
       }
     }
   }
 
+  /* Start of opening current category dialog (to modify or delete). */
+  openConfirmDeleteCategory = () => {
+    this.setState({
+      openCurrentCategory: false,
+      openConfirmDeleteCategory: true,
+    });
+  }
+
+  closeConfirmDeleteCategory = () => {
+    this.setState({
+      openConfirmDeleteCategory: false,
+    });
+  }
+
+  deleteCurrentCategory = () => {
+    this.props.deleteCategory(this.getCategoryName());
+    this.closeConfirmDeleteCategory();
+  }
+
+  openCurrentCategoryDialog = () => {
+    this.setState({
+      openCurrentCategory: true,
+      newCategoryName: this.getCategoryName(),
+      newCategoryWeight: this.getCategoryWeight(),
+    });
+  }
+
+  closeCurrentCategoryDialog = () => {
+    this.setState({
+      openCurrentCategory: false,
+    });
+  }
+
+  changeCategory = (e, field) => {
+    switch(field) {
+      case 'categoryName':
+        this.setState( { newCategoryName: e.target.value } )
+        break;
+      case 'categoryWeight':
+        this.setState( { newCategoryWeight: e.target.value } )
+        break;
+      default:
+        break;
+    }
+  }
+
+  checkNewCategory = () => {
+    const categoryName = this.state.newCategoryName;
+    const categoryWeight = this.state.newCategoryWeight;
+    const totalWeight = this.props.totalWeight;
+
+    if(categoryName === '') {
+      alert('You cannot have an empty name for a category!');
+      return false;
+    } else if(categoryWeight <= 0) {
+      alert('The category cannot 0 or negative weight!');
+      return false;
+    } else if((100 - (totalWeight - this.getCategoryWeight())) < categoryWeight) {
+      const maximumWeight = (100 - (totalWeight - this.getCategoryWeight()));
+      alert('You cannot exceed weight of 100. The maximum weight you can set for this category is ' + maximumWeight + '.');
+      return false;
+    }
+    return true;
+  }
+
+  modifyCategory = () => {
+    if(this.checkNewCategory()) {
+      this.props.modifyCategory(this.props.categoryMapping.get(this.getCategoryName()),
+                                this.getCategoryName(),
+                                this.getCategoryWeight(),
+                                this.state.newCategoryName,
+                                this.state.newCategoryWeight);
+      this.closeCurrentCategoryDialog();
+    }
+  }
+
+
+
+  /* End of opening current category dialog (to modify or delete). */
+
   /* Start of opening new data dialog (to create more data). */
   openNewDataDialog = () => {
     this.setState({
-      openNewData: true ,
+      openNewData: true,
       newDataName: '',
       newDataScore: 0.0,
       newDataMax: 0.0,
@@ -111,7 +218,9 @@ class Category extends Component {
   }
 
   closeNewDataDialog = () => {
-    this.setState( { openNewData: false } );
+    this.setState({ 
+      openNewData: false 
+    });
   }
 
   changeNewData = (e, field) => {
@@ -147,7 +256,7 @@ class Category extends Component {
       alert('You must specify the maximum score on this assignment.');
     } else {
       this.closeNewDataDialog();
-      this.props.addData(this.state.categoryName, this.state.assignmentID, assignmentName, assignmentScore, assignmentMaxScore);
+      this.props.addData(this.getCategoryName(), this.state.assignmentID, assignmentName, assignmentScore, assignmentMaxScore);
 
       this.setState({
         assignmentID: this.state.assignmentID + 1
@@ -171,7 +280,9 @@ class Category extends Component {
   }
 
   closeCurrentDataDialog = () => {
-    this.setState( { openCurrentData: false } );
+    this.setState({ 
+      openCurrentData: false 
+    });
   }
 
   changeCurrentData = (e, field) => {
@@ -190,7 +301,7 @@ class Category extends Component {
     }
   }
 
-  checkNoChanges = () => {
+  checkNoDataChanges = () => {
     /* Returns true if no changes were made. */
     return (this.state.currentDataName === this.state.currentDataNewName &&
             parseFloat(this.state.currentDataScore) === parseFloat(this.state.currentDataNewScore) &&
@@ -227,15 +338,15 @@ class Category extends Component {
     switch(request) {
       case 'delete':
         /* Possible future implementation: confirmation to delete assignment? */
-        this.props.deleteData(this.state.categoryName, this.state.currentDataID);
+        this.props.deleteData(this.getCategoryName(), this.state.currentDataID);
         this.closeCurrentDataDialog();
         break;
       case 'change':
-        if(this.checkNoChanges()) {
+        if(this.checkNoDataChanges()) {
           this.closeCurrentDataDialog();
         } else {
           if(this.verifyCurrentData()) {
-            this.props.modifyData(this.state.categoryName,
+            this.props.modifyData(this.state.categoryID,
                                   this.state.currentDataID,
                                   this.state.currentDataName,
                                   this.state.currentDataScore,
@@ -262,10 +373,10 @@ class Category extends Component {
                   style={{ textAlign: 'left' }}
                   justify='space-between'
                   spacing={24}>
-              <Button color='inherit' 
-                      style={{ height: 40, cursor: 'default', backgroundColor: 'transparent'}} 
-                      disableTouchRipple={true}>
-                  {this.state.categoryName} ({this.state.categoryWeight}%)
+              <Button onClick={this.openCurrentCategoryDialog}
+                      color='inherit' 
+                      style={{ height: 40, cursor: 'pointer' }}>
+                  {this.getCategoryName()} ({this.getCategoryWeight()}%)
               </Button>
               <Button style={{ height: 40 }}
                       onClick={this.openNewDataDialog}>
@@ -295,7 +406,7 @@ class Category extends Component {
           <DialogTitle id="form-dialog-title">Add New Assignment</DialogTitle>
           <DialogContent>
             <DialogContentText>
-              To add a new assignment to {this.state.categoryName}, please enter
+              To add a new assignment to {this.getCategoryName()}, please enter
               the assignment name, the score you received and the maximum score
               possible.
             </DialogContentText>
@@ -403,6 +514,79 @@ class Category extends Component {
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* Diaglogue for modifying current category! */}
+        <Dialog
+          open={this.state.openCurrentCategory}
+          onClose={this.closeCurrentCategoryDialog}
+          aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">Modifying category: {this.getCategoryName()}</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To <strong>modify</strong> this category, please enter any changes 
+              you would like to make.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="categoryName"
+              label="Category Name"
+              type="text"
+              value={this.state.newCategoryName}
+              required={true}
+              onChange={(e) => this.changeCategory(e, 'categoryName')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'changeCategory')}
+              fullWidth
+            />
+            <TextField
+              margin="dense"
+              id="categoryWeight"
+              label="Category Weight (1 to 100)"
+              type="number"
+              inputProps={{ min: '1', max: '100', step: '0.5' }}
+              value={this.state.newCategoryWeight}
+              required={true}
+              onChange={(e) => this.changeCategory(e, 'categoryWeight')}
+              onKeyPress={(e) => this.handleKeyPress(e, 'changeCategory')}
+              fullWidth
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.closeCurrentCategoryDialog} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.openConfirmDeleteCategory} color="primary">
+              Delete Category
+            </Button>
+            <Button onClick={this.modifyCategory} color="primary">
+              Save Changes
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog
+          open={this.state.openConfirmDeleteCategory}
+          onClose={this.closeConfirmDeleteCategory}
+          aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">
+            Are you sure you want to delete the category: {this.getCategoryName()}?
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Deleting a category will <strong>delete all</strong> assignments inside the category as well!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.closeConfirmDeleteCategory} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.deleteCurrentCategory} color="primary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        
 
       </div>
     );

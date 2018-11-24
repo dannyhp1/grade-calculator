@@ -6,7 +6,6 @@ import {
 } from '@material-ui/core';
 import Badge from '../Badge/Badge.jsx';
 
-
 const container = css`
   display: inline;
   text-align: center;
@@ -23,28 +22,36 @@ class Grade extends Component {
     var userWeight = 0.0;
     var currentPercent = 0.0;
 
+    // eslint-disable-next-line
     for(var [categoryID, categoryData] of categories) {
+      // eslint-disable-next-line
       const category = categoryData.name;
-      const weight= categoryData.weight;
-      
+      // eslint-disable-next-line
+      const weight = categoryData.weight;
+
       /* If the category has assignments in it, take it under consideration. */
       const categoryData = data.get(category);
-      const assignmentsAmount = categoryData.size;
-      if(assignmentsAmount > 0) {
-        totalWeight += parseFloat(weight);
 
-        var userScore = 0;
-        var maxScore = 0;
-        
-        for(var [id, assignmentDetails ] of categoryData) {
-          userScore += parseFloat(assignmentDetails.assignmentScore);
-          maxScore += parseFloat(assignmentDetails.assignmentMaxScore);
-        }
+      if(categoryData !== undefined) {
+        const assignmentsAmount = categoryData.size;
+      
+        if(assignmentsAmount > 0) {
+          totalWeight += parseFloat(weight);
 
-        const categoryScore = parseFloat(userScore) / parseFloat(maxScore);
-        if(!isNaN(categoryScore)) {
-          const calculatedScore = categoryScore * parseFloat(weight);
-          userWeight += calculatedScore;
+          var userScore = 0;
+          var maxScore = 0;
+          
+          // eslint-disable-next-line
+          for(var [id, assignmentDetails ] of categoryData) {
+            userScore += parseFloat(assignmentDetails.assignmentScore);
+            maxScore += parseFloat(assignmentDetails.assignmentMaxScore);
+          }
+
+          const categoryScore = parseFloat(userScore) / parseFloat(maxScore);
+          if(!isNaN(categoryScore)) {
+            const calculatedScore = categoryScore * parseFloat(weight);
+            userWeight += calculatedScore;
+          }
         }
       }
     }
@@ -61,6 +68,7 @@ class Grade extends Component {
     var badgeData = [ ]
     const categories = this.props.categories;
 
+    // eslint-disable-next-line
     for(var [categoryID, categoryData] of categories) {
       badgeData.push({name: categoryData.name, weight: categoryData.weight});
     }
