@@ -31,72 +31,147 @@ class Category extends Component {
   };
 
   getState() {
-    const state = {
+    const initialState = {
+      assignmentID: 0,
+
       categoryName: this.props.categoryName,
       categoryWeight: this.props.categoryWeight,
       openNewData: false,
-      newDataAssignment: '',
+      newDataName: '',
       newDataScore: 0.0,
       newDataMax: 0.0,
 
       openCurrentData: false,
-      selectedDataAssignment: '',
-      selectedDataScore: 0.0,
-      selectedDataMax: 0.0,
-      selectedDataNewName: '',
-      selectedDataNewScore: 0.0,
-      selectedDataNewMax: 0.0,
+      currentDataName: '',
+      currentDataScore: 0.0,
+      currentDataMax: 0.0,
+      currentDataNewName: '',
+      currentDataNewScore: 0.0,
+      currentDataNewMax: 0.0,
     }
-    return state;
+    return initialState;
   }
 
   renderData = () => {
-    const dataSet = this.props.dataSet[this.props.categoryName];
+    var dataSet = [ ];
+    var categoryData = this.props.data;
+
+    for(var [id, assignmentDetails ] of categoryData) {
+      dataSet.push({ assignmentID: id, 
+                     assignmentName: assignmentDetails.assignmentName,
+                     assignmentScore: assignmentDetails.assignmentScore,
+                     assignmentMaxScore: assignmentDetails.assignmentMaxScore });
+    }
 
     return dataSet.map((data, index) => (
-      <TableRow onClick={() => this.handleOpenCurrentData(data.assignmentName, data.assignmentScore, data.assignmentMaxScore)} 
+      <TableRow onClick={() => this.openCurrentDataDialog(data.assignmentID,
+                                                          data.assignmentName, 
+                                                          data.assignmentScore, 
+                                                          data.assignmentMaxScore)} 
                 style={{cursor: 'pointer'}} key={index}>
-        <TableCell>{data.assignmentName}</TableCell>
-        <TableCell numeric>{data.assignmentScore}</TableCell>
-        <TableCell numeric>{data.assignmentMaxScore}</TableCell>
+        <TableCell>
+          {data.assignmentName}
+        </TableCell>
+        <TableCell numeric>
+          {data.assignmentScore}
+        </TableCell>
+        <TableCell numeric>
+          {data.assignmentMaxScore}
+        </TableCell>
       </TableRow>
     ));
   }
 
-  // --- HANDLING MODIFYING CURRENT ASSIGNMENT ---
-  handleOpenCurrentData = (assignmentName, assignmentScore, assignmentMax) => {
-    this.setState({ 
-      openCurrentData: true,
-      selectedDataAssignment: assignmentName,
-      selectedDataScore: assignmentScore,
-      selectedDataMax: assignmentMax,
-      selectedDataNewName: assignmentName,
-      selectedDataNewScore: assignmentScore,
-      selectedDataNewMax: assignmentMax,
+  /* Start of opening new data dialog (to create more data). */
+  openNewDataDialog = () => {
+    this.setState({
+      openNewData: true ,
+      newDataName: '',
+      newDataScore: 0.0,
+      newDataMax: 0.0,
     });
   }
 
-  handleCloseCurrentData = () => {
-    this.setState( { openCurrentData: false } );
+  closeNewDataDialog = () => {
+    this.setState( { openNewData: false } );
   }
 
-  handleModification = (e, field) => {
+  changeNewData = (e, field) => {
     switch(field) {
       case 'assignmentName':
-        this.setState( { selectedDataNewName: e.target.value } )
+        this.setState( { newDataName: e.target.value } )
         break;
       case 'assignmentScore':
-        this.setState( { selectedDataNewScore: e.target.value } )
+        this.setState( { newDataScore: e.target.value } )
         break;
       case 'assignmentMaxScore':
-        this.setState( { selectedDataNewMax: e.target.value } )
+        this.setState( { newDataMax: e.target.value } )
         break;
       default:
         break;
     }
   }
 
-  verifyChanges = (assignmentName, assignmentScore, assignmentMaxScore) => {
+  checkNewData = () => {
+    const assignmentName = this.state.newDataName.trim();
+    const assignmentScore = parseFloat(this.state.newDataScore);
+    const assignmentMaxScore = parseFloat(this.state.newDataMax);
+
+    if(assignmentName === '') {
+      alert('You cannot add an assignment with an empty name!');
+    } else if(assignmentScore < 0) {
+      alert('You cannot get a negative score on your assignment!');
+    } else if(assignmentMaxScore < 0) {
+      alert('The assignment cannot be worth less than 0 points!');
+    } else if(isNaN(assignmentScore)) {
+      alert('You must specify a score you received on this assignment.');
+    } else if(isNaN(assignmentMaxScore)) {
+      alert('You must specify the maximum score on this assignment.');
+    } else {
+      this.closeNewDataDialog();
+      this.props.addData(this.state.categoryName, this.state.assignmentID, assignmentName, assignmentScore, assignmentMaxScore);
+
+      this.setState({
+        assignmentID: this.state.assignmentID + 1
+      });
+    }
+  }
+  /* End of opening new data dialog (to create more data). */
+
+  /* Start of opening current data dialog (to modify or delete). */
+  openCurrentDataDialog = (assignmentName, assignmentScore, assignmentMax) => {
+    this.setState({ 
+      openCurrentData: true,
+      currentDataName: assignmentName,
+      currentDataScore: assignmentScore,
+      currentDataMax: assignmentMax,
+      currentDataNewName: assignmentName,
+      currentDataNewScore: assignmentScore,
+      currentDataNewMax: assignmentMax,
+    });
+  }
+
+  closeCurrentDataDialog = () => {
+    this.setState( { openCurrentData: false } );
+  }
+
+  changeCurrentData = (e, field) => {
+    switch(field) {
+      case 'assignmentName':
+        this.setState( { currentDataNewName: e.target.value } )
+        break;
+      case 'assignmentScore':
+        this.setState( { currentDataNewScore: e.target.value } )
+        break;
+      case 'assignmentMaxScore':
+        this.setState( { currentDataNewMax: e.target.value } )
+        break;
+      default:
+        break;
+    }
+  }
+
+  verifyCurrentData = (assignmentName, assignmentScore, assignmentMaxScore) => {
     if(assignmentName === '') {
       alert('You cannot leave the assignment name empty!');
       return false;
@@ -120,20 +195,22 @@ class Category extends Component {
   submitChanges = (request) => {
     switch(request) {
       case 'delete':
-        // console.log('You want to delete assignmentName: ' + this.state.selectedDataAssignment);
         // Delete assignment here.
+        this.closeCurrentDataDialog();
         break;
       case 'change':
         // If absolutely no changes were made and the user just clicked save, don't do anything.
-        if(this.state.selectedDataAssignment === this.state.selectedDataNewName &&
-           parseFloat(this.state.selectedDataScore) === parseFloat(this.state.selectedDataNewScore) &&
-           parseFloat(this.state.selectedDataMax) === parseFloat(this.state.selectedDataNewMax)) {
-          this.handleCloseCurrentData();
+        if(this.state.currentDataName === this.state.currentDataNewName &&
+           parseFloat(this.state.currentDataScore) === parseFloat(this.state.currentDataNewScore) &&
+           parseFloat(this.state.currentDataMax) === parseFloat(this.state.currentDataNewMax)) {
+          this.closeCurrentDataDialog();
         } else {
-          // Handle changes here!
-          if(this.verifyChanges(this.state.selectedDataNewName, this.state.selectedDataNewScore, this.state.selectedDataNewMax)) {
-            // The changes are valid!
-            this.handleCloseCurrentData();
+          if(this.verifyCurrentData(this.state.currentDataNewName, this.state.currentDataNewScore, this.state.currentDataNewMax)) {
+            this.props.modifyData(this.state.categoryName,
+                                  this.state.currentDataName, this.state.currentDataScore,
+                                  this.state.currentDataMax, this.state.currentDataNewName,
+                                  this.state.currentDataNewScore, this.state.currentDataNewMax);
+            this.closeCurrentDataDialog();
           }
         }
 
@@ -142,58 +219,7 @@ class Category extends Component {
         break;
     }
   }
-
-
-  // --- HANDLING ADDING NEW ASSIGNMENT ---
-  handleOpenNewData = () => {
-    this.setState({
-      openNewData: true ,
-      newDataAssignment: '',
-      newDataScore: 0.0,
-      newDataMax: 0.0,
-    });
-  }
-
-  handleCloseNewData = () => {
-    this.setState( { openNewData: false } );
-  }
-
-  handleNewChange = (e, field) => {
-    switch(field) {
-      case 'assignmentName':
-        this.setState( { newDataAssignment: e.target.value } )
-        break;
-      case 'assignmentScore':
-        this.setState( { newDataScore: e.target.value } )
-        break;
-      case 'assignmentMaxScore':
-        this.setState( { newDataMax: e.target.value } )
-        break;
-      default:
-        break;
-    }
-  }
-
-  checkDataFields = () => {
-    const assignmentName = this.state.newDataAssignment.trim();
-    const assignmentScore = parseFloat(this.state.newDataScore);
-    const assignmentMaxScore = parseFloat(this.state.newDataMax);
-
-    if(assignmentName === '') {
-      alert('You cannot add an assignment with an empty name!');
-    } else if(assignmentScore < 0) {
-      alert('You cannot get a negative score on your assignment!');
-    } else if(assignmentMaxScore < 0) {
-      alert('The assignment cannot be worth less than 0 points!');
-    } else if(isNaN(assignmentScore)) {
-      alert('You must specify a score you received on this assignment.');
-    } else if(isNaN(assignmentMaxScore)) {
-      alert('You must specify the maximum score on this assignment.');
-    } else {
-      this.handleCloseNewData();
-      this.props.addData(this.state.categoryName, assignmentName, assignmentScore, assignmentMaxScore);
-    }
-  }
+  /* End of opening current data dialog (to modify or delete). */
 
   render() {
     return (
@@ -209,7 +235,7 @@ class Category extends Component {
                       disableTouchRipple={true}>
                   {this.state.categoryName} ({this.state.categoryWeight}%)
               </Button>
-              <Button onClick={this.handleOpenNewData} style={{ height: 40 }}>
+              <Button onClick={this.openNewDataDialog} style={{ height: 40 }}>
                 <AddIcon style={{ color: '#2979ff' }}/>
               </Button>
             </Grid>
@@ -231,7 +257,7 @@ class Category extends Component {
         {/* Diaglogue for adding a brand new assignment! */}
         <Dialog
           open={this.state.openNewData}
-          onClose={this.handleCloseNewData}
+          onClose={this.closeNewDataDialog}
           aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Add New Assignment</DialogTitle>
           <DialogContent>
@@ -247,7 +273,7 @@ class Category extends Component {
               label="Assignment Name"
               type="text"
               required={true}
-              onChange={(e) => this.handleNewChange(e, 'assignmentName')}
+              onChange={(e) => this.changeNewData(e, 'assignmentName')}
               fullWidth
             />
             <TextField
@@ -257,7 +283,7 @@ class Category extends Component {
               type="number"
               inputProps={{ min: '0', step: '0.5' }}
               required={true}
-              onChange={(e) => this.handleNewChange(e, 'assignmentScore')}
+              onChange={(e) => this.changeNewData(e, 'assignmentScore')}
               fullWidth
             />
             <TextField
@@ -267,15 +293,15 @@ class Category extends Component {
               type="number"
               inputProps={{ min: '0', step: '0.5' }}
               required={true}
-              onChange={(e) => this.handleNewChange(e, 'assignmentMaxScore')}
+              onChange={(e) => this.changeNewData(e, 'assignmentMaxScore')}
               fullWidth
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCloseNewData} color="primary">
+            <Button onClick={this.closeNewDataDialog} color="primary">
               Cancel
             </Button>
-            <Button onClick={this.checkDataFields} color="primary">
+            <Button onClick={this.checkNewData} color="primary">
               Add Assignment
             </Button>
           </DialogActions>
@@ -284,9 +310,9 @@ class Category extends Component {
         {/* Diaglogue for modifying current assignment! */}
         <Dialog
           open={this.state.openCurrentData}
-          onClose={this.handleCloseCurrentData}
+          onClose={this.closeCurrentDataDialog}
           aria-labelledby="form-dialog-title">
-          <DialogTitle id="form-dialog-title">Modifying assignment: {this.state.selectedDataAssignment}</DialogTitle>
+          <DialogTitle id="form-dialog-title">Modifying assignment: {this.state.currentDataName}</DialogTitle>
           <DialogContent>
             <DialogContentText>
               To <strong>modify</strong> this assignment, please enter any changes 
@@ -298,9 +324,9 @@ class Category extends Component {
               id="assignmentName"
               label="Assignment Name"
               type="text"
-              value={this.state.selectedDataNewName}
+              value={this.state.currentDataNewName}
               required={true}
-              onChange={(e) => this.handleModification(e, 'assignmentName')}
+              onChange={(e) => this.changeCurrentData(e, 'assignmentName')}
               fullWidth
             />
             <TextField
@@ -309,9 +335,9 @@ class Category extends Component {
               label="Your Score"
               type="number"
               inputProps={{ min: '0', step: '0.5' }}
-              value={this.state.selectedDataNewScore}
+              value={this.state.currentDataNewScore}
               required={true}
-              onChange={(e) => this.handleModification(e, 'assignmentScore')}
+              onChange={(e) => this.changeCurrentData(e, 'assignmentScore')}
               fullWidth
             />
             <TextField
@@ -320,14 +346,14 @@ class Category extends Component {
               label="Maximum Score"
               type="number"
               inputProps={{ min: '0', step: '0.5' }}
-              value={this.state.selectedDataNewMax}
+              value={this.state.currentDataNewMax}
               required={true}
-              onChange={(e) => this.handleModification(e, 'assignmentMaxScore')}
+              onChange={(e) => this.changeCurrentData(e, 'assignmentMaxScore')}
               fullWidth
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={this.handleCloseCurrentData} color="primary">
+            <Button onClick={this.closeCurrentDataDialog} color="primary">
               Cancel
             </Button>
             <Button onClick={(e) => this.submitChanges('delete')} color="primary">
