@@ -301,14 +301,6 @@ class Category extends Component {
     }
   }
 
-  checkNoDataChanges = () => {
-    /* Returns true if no changes were made. */
-    return (this.state.currentDataName === this.state.currentDataNewName &&
-            parseFloat(this.state.currentDataScore) === parseFloat(this.state.currentDataNewScore) &&
-            parseFloat(this.state.currentDataMax) === parseFloat(this.state.currentDataNewMax))
-  }
-  
-
   verifyCurrentData = () => {
     const assignmentName = this.state.currentDataNewName;
     const assignmentScore = this.state.currentDataNewScore;
@@ -342,20 +334,16 @@ class Category extends Component {
         this.closeCurrentDataDialog();
         break;
       case 'change':
-        if(this.checkNoDataChanges()) {
+        if(this.verifyCurrentData()) {
+          this.props.modifyData(this.state.categoryName,
+                                this.state.currentDataID,
+                                this.state.currentDataName,
+                                this.state.currentDataScore,
+                                this.state.currentDataMax,
+                                this.state.currentDataNewName,
+                                this.state.currentDataNewScore, 
+                                this.state.currentDataNewMax);
           this.closeCurrentDataDialog();
-        } else {
-          if(this.verifyCurrentData()) {
-            this.props.modifyData(this.state.categoryID,
-                                  this.state.currentDataID,
-                                  this.state.currentDataName,
-                                  this.state.currentDataScore,
-                                  this.state.currentDataMax,
-                                  this.state.currentDataNewName,
-                                  this.state.currentDataNewScore, 
-                                  this.state.currentDataNewMax);
-            this.closeCurrentDataDialog();
-          }
         }
         break;
       default:
