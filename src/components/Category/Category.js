@@ -90,24 +90,28 @@ class Category extends Component {
                        assignmentScore: assignmentDetails.assignmentScore,
                        assignmentMaxScore: assignmentDetails.assignmentMaxScore });
       }
-  
-      return dataSet.map((data, index) => (
-        <TableRow onClick={() => this.openCurrentDataDialog(data.assignmentID,
-                                                            data.assignmentName, 
-                                                            data.assignmentScore, 
-                                                            data.assignmentMaxScore)} 
-                  style={{cursor: 'pointer'}} key={index}>
-          <TableCell style={{ color: '#ffffff' }}>
-            {data.assignmentName}
-          </TableCell>
-          <TableCell numeric style={{ color: '#ffffff' }}>
-            {data.assignmentScore}
-          </TableCell>
-          <TableCell numeric style={{ color: '#ffffff' }}>
-            {data.assignmentMaxScore}
-          </TableCell>
-        </TableRow>
-      ));
+
+      const result = dataSet.map((data, index) => {
+        return (
+          <TableRow onClick={() => this.openCurrentDataDialog(data.assignmentID,
+                                                              data.assignmentName, 
+                                                              data.assignmentScore, 
+                                                              data.assignmentMaxScore)} 
+                    style={{cursor: 'pointer'}} key={index}>
+            <TableCell style={{ color: '#ffffff' }}>
+              {data.assignmentName}
+            </TableCell>
+            <TableCell numeric style={{ color: '#ffffff' }}>
+              {data.assignmentScore}
+            </TableCell>
+            <TableCell numeric style={{ color: '#ffffff' }}>
+              {data.assignmentMaxScore}
+            </TableCell>
+          </TableRow>
+        );
+      });
+
+      return result;
     }
   }
 

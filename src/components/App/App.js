@@ -187,7 +187,6 @@ class App extends Component {
             </Grid>
           </div>
         </div>
-
       </div>
     );
   }
