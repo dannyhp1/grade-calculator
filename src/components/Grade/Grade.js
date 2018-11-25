@@ -144,8 +144,10 @@ class Grade extends Component {
   render() {
     return (
       <div className={container}>
-        <Typography style={{ marginTop: 20 }} variant='h5' color='inherit'>
-          <strong>CURRENT GRADE:</strong>
+        <Typography style={{ color: '#11293b', marginTop: 20, marginBottom: 5 }}
+                    variant='title' 
+                    color='inherit'>
+          CURRENT GRADE:
         </Typography>
         
         <div>

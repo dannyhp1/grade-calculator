@@ -86,7 +86,7 @@ class AppHeader extends Component {
   render() {
     return (
       <div style={{ fontFamily: 'Roboto' }}>
-        <AppBar color='primary' 
+        <AppBar style={{ background: '#6486ba' }}
                 justify='space-between'
                 position="sticky">
           <Toolbar>

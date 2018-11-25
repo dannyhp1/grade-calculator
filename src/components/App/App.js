@@ -168,21 +168,24 @@ class App extends Component {
   render() {
     return (
       <div className={app}>
-        <CssBaseline />
-        <AppHeader addCategory={this.addCategory}
-                   categories={this.state.categories} 
-                   currentWeight={this.state.totalWeight}/>
-          
-        <Grade categories={this.state.categories} data={this.state.data}/>
+        <div style={{ background: '#cfdff1',
+                      height: '200vh' }}>
+          <CssBaseline />
+          <AppHeader addCategory={this.addCategory}
+                    categories={this.state.categories} 
+                    currentWeight={this.state.totalWeight}/>
         
-        <div>
-          <Grid container spacing={24} 
-                style={{ justify: 'center',
-                         display: 'flex', 
-                         flexWrap: 'wrap',
-                         flexDirection: 'row' }}>
-            {this.renderCategories()}
-          </Grid>
+          <Grade categories={this.state.categories} data={this.state.data}/>
+          
+          <div>
+            <Grid container spacing={24} 
+                  style={{ justify: 'center',
+                          display: 'flex', 
+                          flexWrap: 'wrap',
+                          flexDirection: 'row' }}>
+              {this.renderCategories()}
+            </Grid>
+          </div>
         </div>
 
       </div>

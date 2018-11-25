@@ -22,6 +22,8 @@ var cardStyle = {
   height: 'auto',
   margin: '15px 15px',
   transitionDuration: '0.3s',
+  background: '#6486ba',
+  color: '#ffffff',
 }
 
 class Category extends Component {
@@ -95,13 +97,13 @@ class Category extends Component {
                                                             data.assignmentScore, 
                                                             data.assignmentMaxScore)} 
                   style={{cursor: 'pointer'}} key={index}>
-          <TableCell>
+          <TableCell style={{ color: '#ffffff' }}>
             {data.assignmentName}
           </TableCell>
-          <TableCell numeric>
+          <TableCell numeric style={{ color: '#ffffff' }}>
             {data.assignmentScore}
           </TableCell>
-          <TableCell numeric>
+          <TableCell numeric style={{ color: '#ffffff' }}>
             {data.assignmentMaxScore}
           </TableCell>
         </TableRow>
@@ -358,7 +360,7 @@ class Category extends Component {
         <Card style={cardStyle}>
           <CardContent>
             <Grid container
-                  style={{ textAlign: 'left' }}
+                  style={{ textAlign: 'left', alignContent: 'left', alignItems: 'left' }}
                   justify='space-between'
                   spacing={24}>
               <Button onClick={this.openCurrentCategoryDialog}
@@ -366,17 +368,17 @@ class Category extends Component {
                       style={{ height: 40, cursor: 'pointer' }}>
                   {this.getCategoryName()} ({this.getCategoryWeight()}%)
               </Button>
-              <Button style={{ height: 40 }}
+              <Button style={{ height: 30 }}
                       onClick={this.openNewDataDialog}>
-                <AddIcon style={{ height: 'auto', padding: 0, margin: 0, color: '#2979ff'}} />
+                <AddIcon style={{ height: 'auto', padding: 0, margin: 0, color: '#ffffff'}} />
               </Button>
             </Grid>
             <Table style={{ width: 350, display: 'block' }}>
               <TableHead>
                 <TableRow>
-                  <TableCell>Assignment</TableCell>
-                  <TableCell numeric>Score</TableCell>
-                  <TableCell numeric>Max Score</TableCell>
+                  <TableCell style={{ color: '#ffffff' }}>Assignment</TableCell>
+                  <TableCell numeric style={{ color: '#ffffff' }}>Score</TableCell>
+                  <TableCell numeric style={{ color: '#ffffff' }}>Max</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
