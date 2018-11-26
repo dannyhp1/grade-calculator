@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grade from '../Grade/Grade';
 import AppHeader from '../AppHeader/AppHeader';
 import Category from '../Category/Category';
-import Notification from '../Notifications/Notifications';
+import Reminder from '../Reminder/Reminder';
 import { Grid } from '@material-ui/core';
 
 const app = css`
@@ -194,7 +194,7 @@ class App extends Component {
           </div>
         </div>
 
-        <Notification emptyCategories={this.checkEmptyCategories()} />
+        <Reminder emptyCategories={this.checkEmptyCategories()} />
       </div>
     );
   }

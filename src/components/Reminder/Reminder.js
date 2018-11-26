@@ -92,7 +92,7 @@ const styles2 = theme => ({
   },
 });
 
-class Notifications extends React.Component {
+class Reminder extends React.Component {
   state = {
     noCategories: this.props.emptyCategories,
   };
@@ -130,8 +130,8 @@ class Notifications extends React.Component {
   }
 }
 
-Notifications.propTypes = {
+Reminder.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles2)(Notifications);
+export default withStyles(styles2)(Reminder);
