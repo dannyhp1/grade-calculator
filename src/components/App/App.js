@@ -4,6 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Grade from '../Grade/Grade';
 import AppHeader from '../AppHeader/AppHeader';
 import Category from '../Category/Category';
+import Notification from '../Notifications/Notifications';
 import { Grid } from '@material-ui/core';
 
 const app = css`
@@ -31,6 +32,11 @@ class App extends Component {
 
     return initialState;
   };
+
+  checkEmptyCategories = () => {
+    /* Checks to see if any categories are created. If not, display a message. */
+    return (this.state.categories.size === 0);
+  }
 
   addCategory = (categoryName, categoryWeight) => {
     const newWeight = this.state.totalWeight + categoryWeight;
@@ -169,7 +175,7 @@ class App extends Component {
     return (
       <div className={app}>
         <div style={{ background: '#cfdff1',
-                      height: '200vh' }}>
+                      height: '110vh' }}>
           <CssBaseline />
           <AppHeader addCategory={this.addCategory}
                     categories={this.state.categories} 
@@ -187,6 +193,8 @@ class App extends Component {
             </Grid>
           </div>
         </div>
+
+        <Notification emptyCategories={this.checkEmptyCategories()} />
       </div>
     );
   }
