@@ -171,6 +171,13 @@ class App extends Component {
     ));
   }
 
+  renderReminder = () => {
+    const emptyCategories = this.checkEmptyCategories();
+    return (
+      <Reminder emptyCategories={emptyCategories} />
+    );
+  }
+
   render() {
     return (
       <div className={app}>
@@ -194,7 +201,7 @@ class App extends Component {
           </div>
         </div>
 
-        <Reminder emptyCategories={this.checkEmptyCategories()} />
+        {this.renderReminder()}
       </div>
     );
   }
