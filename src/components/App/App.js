@@ -6,6 +6,18 @@ import AppHeader from '../AppHeader/AppHeader';
 import Category from '../Category/Category';
 import Reminder from '../Reminder/Reminder';
 import { Grid } from '@material-ui/core';
+import firebase from 'firebase';
+
+var config = {
+  apiKey: "AIzaSyD-JVvjrWqKZjjWBTkpRaKYyIOsE1adDHU",
+  authDomain: "dannyhp-grade-calculator.firebaseapp.com",
+  databaseURL: "https://dannyhp-grade-calculator.firebaseio.com",
+  projectId: "dannyhp-grade-calculator",
+  storageBucket: "dannyhp-grade-calculator.appspot.com",
+  messagingSenderId: "487553763912"
+};
+
+firebase.initializeApp(config);
 
 const app = css`
   text-align: center;
@@ -32,6 +44,112 @@ class App extends Component {
 
     return initialState;
   };
+
+  insertLoadedData = (categoryID, categoryList, categoryMapping, categoryData, totalWeight) => {    
+    this.setState({
+      categoryID: categoryID,
+      categories: categoryList,
+      categoryMapping: categoryMapping,
+      data: categoryData,
+      totalWeight: totalWeight,
+    });
+  }
+
+  loadData = (username) => {
+    var ref = firebase.database().ref('users/' + username)
+
+    ref.on('value', (snapshot) => {
+      const userData = snapshot.val();
+
+      var categoryID;
+      var categoryMap = new Map();
+      var categoryMapping = new Map();
+      var categoryData = new Map();
+      var totalWeight;
+
+      try {
+        for(var i = 0; i < userData.categories.length; ++i) {
+          var currentCategory = userData.categories[i];
+          categoryMap.set(parseFloat(currentCategory.id), { name: currentCategory.name, weight: parseFloat(currentCategory.weight), id: parseFloat(currentCategory.id) });
+        }
+
+        for(var i = 0; i < userData.categoryMapping.length; ++i) {
+          var currentCategoryMapping = userData.categoryMapping[i];
+          categoryMapping.set(currentCategoryMapping[0], currentCategoryMapping[1]);
+        }
+
+        for(var i = 0; i < userData.data.length; ++i) {
+          const currentCategoryData = userData.data[i];
+          const currentCategoryName = currentCategoryData[0];
+
+          var currentCategoryDataSet = new Map();
+
+          for(var j = 1; j < currentCategoryData.length; ++j) {
+            var currentData = currentCategoryData[j];
+            currentCategoryDataSet.set(currentData[0], {assignmentName: currentData[1], assignmentScore: currentData[2], assignmentMaxScore: currentData[3] });
+          }
+
+          categoryData.set(currentCategoryName, currentCategoryDataSet);
+        }
+
+        categoryID = userData.categoryID;
+        totalWeight = userData.totalWeight;
+      
+        this.setState({
+          categoryID: 0,
+          categories: new Map(),
+          categoryMapping: new Map(),
+          data: new Map(),
+          totalWeight: 0.0,
+        });
+      } catch(e) {
+        alert('There is no data associated with that user!');
+        return;
+      }
+
+      this.insertLoadedData(categoryID, categoryMap, categoryMapping, categoryData, totalWeight);
+    });
+  }
+
+  saveData = (username) => {
+
+    var allCategories = [ ];
+
+    for(var [key, value] of this.state.categories) {
+      // [categoryName, weight, id]
+      allCategories.push(value);
+    }
+
+    var categoryMapping = [ ]
+
+    for(var [key, value] of this.state.categoryMapping) {
+        // [categoryName, key]
+        categoryMapping.push([key, value]);
+    }
+
+    var dataMapping = [ ]
+
+    for(var [key, value] of this.state.data) {
+        // [categoryName, [dataID, assignmentName, assignmentScore, assignmentMaxScore]]
+        const category = key;
+        var thisCategory = [key];
+        
+        for(var [dataId, dataInfo] of value) {
+            thisCategory.push([dataId, dataInfo.assignmentName, dataInfo.assignmentScore, dataInfo.assignmentMaxScore]);
+        }
+
+        dataMapping.push(thisCategory);
+    }
+
+    firebase.database().ref('users/' + username).set({
+      username: username,
+      categoryID: this.state.categoryID,
+      categories: allCategories,
+      categoryMapping: categoryMapping,
+      data: dataMapping,
+      totalWeight: this.state.totalWeight,
+    });  
+  }
 
   checkEmptyCategories = () => {
     /* Checks to see if any categories are created. If not, display a message. */
@@ -101,8 +219,6 @@ class App extends Component {
       data: data,
       totalWeight: newTotal,
     })
-
-    console.log('# --- End --- #');
   }
 
   addData = (categoryName, assignmentID, assignmentName, assignmentScore, assignmentMaxScore) => {
@@ -181,27 +297,31 @@ class App extends Component {
   render() {
     return (
       <div className={app}>
+    
         <div style={{ background: '#cfdff1',
-                      height: '110vh' }}>
-          <CssBaseline />
-          <AppHeader addCategory={this.addCategory}
-                    categories={this.state.categories} 
-                    currentWeight={this.state.totalWeight}/>
-        
-          <Grade categories={this.state.categories} data={this.state.data}/>
-          
-          <div>
+                        height: '110vh' }}>
+            <CssBaseline />
+            <AppHeader loadData={this.loadData}
+                saveData={this.saveData}
+                addCategory={this.addCategory}
+                categories={this.state.categories} 
+                currentWeight={this.state.totalWeight}/>
+
+            <Grade categories={this.state.categories} data={this.state.data}/>
+
+            <div>
             <Grid container spacing={24} 
-                  style={{ justify: 'center',
-                          display: 'flex', 
-                          flexWrap: 'wrap',
-                          flexDirection: 'row' }}>
-              {this.renderCategories()}
+                style={{ justify: 'center',
+                        display: 'flex', 
+                        flexWrap: 'wrap',
+                        flexDirection: 'row' }}>
+            {this.renderCategories()}
             </Grid>
-          </div>
+            </div>
+
         </div>
 
-        {this.renderReminder()}
+        {this.renderReminder()}    
       </div>
     );
   }

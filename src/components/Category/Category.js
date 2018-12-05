@@ -36,9 +36,16 @@ class Category extends Component {
     const name = this.getCategoryName();
     const weight = this.getCategoryWeight();
     const id = this.getCategoryID();
+    var highestID = 0;
+
+    for (var [key, value] of this.props.data) {
+        if(key > highestID) {
+            highestID = key;
+        }
+    }
 
     const initialState = {
-      assignmentID: 0,
+      assignmentID: highestID + 1,
 
       openCurrentCategory: false,
       openConfirmDeleteCategory: false,
