@@ -13,7 +13,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import SaveIcon from '@material-ui/icons/Save';
+import CloseIcon from '@material-ui/icons/Close';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
@@ -28,8 +28,27 @@ class AppHeader extends Component {
       openSave: false,
       loadName: '',
       openLoad: false,
+
+      openReset: false,
     };
   };
+
+  handleOpenReset = () => {
+    this.setState({
+      openReset: true,
+    });
+  }
+
+  handleCloseReset = () => {
+    this.setState({
+      openReset: false 
+    });
+  }
+
+  resetEverything = () => {
+    this.props.reset();
+    this.handleCloseReset();
+  }
 
   handleOpenSave = () => {
     this.setState({
@@ -188,6 +207,11 @@ class AppHeader extends Component {
                         style={{ height: 40 }}>
                   <CloudUploadIcon /> <span style={{ marginLeft: 5, paddingRight: 0, marginRight: 0, textAlign: 'center' }}>Save</span>
                 </Button>
+                <Button onClick={this.handleOpenReset}
+                        color='inherit' 
+                        style={{ height: 40 }}>
+                  <CloseIcon /> <span style={{ marginLeft: 5 }}>Reset Grades</span>
+                </Button>
                 <Button onClick={this.handleOpenCategory}
                         color='inherit' 
                         style={{ height: 40 }}>
@@ -307,6 +331,29 @@ class AppHeader extends Component {
             </Button>
           </DialogActions>
         </Dialog>
+
+        <Dialog
+          open={this.state.openReset}
+          onClose={this.handleCloseReset}
+          aria-labelledby="form-dialog-title">
+          <DialogTitle id="form-dialog-title">
+            Are you sure you want to reset everything?
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              There is no other way to retrieve your data after clearing everything!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleCloseReset} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={this.resetEverything} color="primary">
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
+
       </div>
     )
   }

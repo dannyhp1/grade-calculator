@@ -45,6 +45,16 @@ class App extends Component {
     return initialState;
   };
 
+  reset = () => {
+    this.setState({
+      categoryID: 0,
+      categories: new Map(),
+      categoryMapping: new Map(),
+      data: new Map(),
+      totalWeight: 0.0,
+    });
+  }
+
   insertLoadedData = (categoryID, categoryList, categoryMapping, categoryData, totalWeight) => {    
     this.setState({
       categoryID: categoryID,
@@ -302,10 +312,11 @@ class App extends Component {
                         height: '110vh' }}>
             <CssBaseline />
             <AppHeader loadData={this.loadData}
-                saveData={this.saveData}
-                addCategory={this.addCategory}
-                categories={this.state.categories} 
-                currentWeight={this.state.totalWeight}/>
+                       saveData={this.saveData}
+                       addCategory={this.addCategory}
+                       categories={this.state.categories} 
+                       currentWeight={this.state.totalWeight}
+                       reset={this.reset}/>
 
             <Grade categories={this.state.categories} data={this.state.data}/>
 
