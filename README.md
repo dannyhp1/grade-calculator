@@ -34,3 +34,4 @@ These are all bugs that have been identified and fixed within the application.
 - November 21, 2018 - Application development started. Landing page was created and basic functionality was implemented. Prototype deployed to (https://grade-calculator.netlify.com).
 - November 22, 2018 - Application became fully responsive to all screen sizes (including mobile). Development for assignment/category deletion and modification started.
 - November 23, 2018 - Implemented the functionality for users to modify assignment details (you can change the assignment name, score or max score) for any assignment in any category. The grade calculation will continue to update!
+- December 5, 2018 - Implemented functionality for users to save their grades and load up their grades using Google's Firebase Realtime DB. You may also reset your grades (similar to refreshing the page).
