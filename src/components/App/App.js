@@ -68,7 +68,7 @@ class App extends Component {
   loadData = (username) => {
     var ref = firebase.database().ref('users/' + username)
 
-    ref.on('value', (snapshot) => {
+    ref.once('value', (snapshot) => {
       const userData = snapshot.val();
 
       var categoryID;
