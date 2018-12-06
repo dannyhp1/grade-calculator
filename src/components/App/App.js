@@ -216,12 +216,14 @@ class App extends Component {
         break;
       case 'invalidModifyCategory':
         var message = '';
+        console.log(data.type);
+
         if(data.type === 'empty') {
           message = 'You must specify a name for the category.';
-        } else if(data.type = 'noWeight') {
-          message = 'You must specify a weight for the category!';
         } else if(data.type === 'exceed') {
           message = 'You must specify a weight between 1 and 100.';
+        } else if(data.type = 'noWeight') {
+          message = 'You must specify a weight for the category!';
         } else if(data.type === 'outOfBounds' ) {
           message = 'You cannot exceed the maximum weight of 100. The max weight you can set is ' + data.max;
         }
