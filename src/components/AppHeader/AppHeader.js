@@ -16,6 +16,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import InfoIcon from '@material-ui/icons/Info';
 
 class AppHeader extends Component {
   constructor (props) {
@@ -69,7 +70,7 @@ class AppHeader extends Component {
 
   checkSaveName = () => {
     if(this.state.saveName === '') {
-      alert('You cannot save your data with an empty username!');
+      this.props.addNotification('noUsernameSave')
       return;
     } else {
       this.props.saveData(this.state.saveName);
@@ -102,7 +103,7 @@ class AppHeader extends Component {
 
   checkLoadName = () => {
     if(this.state.loadName === '') {
-      alert('You cannot load data without specifying a username!');
+      this.props.addNotification('noUsernameLoad')
       return;
     } else {
       this.props.loadData(this.state.loadName);
@@ -154,20 +155,25 @@ class AppHeader extends Component {
     const categoryWeight = parseFloat(this.state.categoryWeight);
 
     if(categoryName === '') {
-      alert('You cannot add a category with an empty name!');
+      this.props.addNotification('invalidCategoryName', {type: 'empty'});
+      return;
     } if(isNaN(categoryWeight)) {
-      alert('You must specify a weight for the category!');
+      this.props.addNotification('invalidCategoryWeight', {type: 'empty'});
+      return;
     } else if(categoryWeight <= 0 || categoryWeight > 100) {
-      alert('Your category can only have a weight between 1 and 100!');
-    } else if(this.props.categories.get(categoryName) !== undefined) {
-      alert('You already have a category named "' + categoryName + '". You cannot have two categories with the same name!');
+      this.props.addNotification('invalidCategoryWeight', {type: 'exceed'});
+      return;
+    } else if(this.props.data.get(categoryName) !== undefined) {
+      this.props.addNotification('invalidCategoryName', {type: 'duplicate'});
+      return;
     } else {
       /* Check to see if the weight will be over 100 when category is added (not valid).
       Future implementation: extra credit available! */
       const combineWeight = categoryWeight + this.props.currentWeight;
       if(combineWeight > 100.00) {
         var maximumWeight = 100.00 - this.props.currentWeight;
-        alert(categoryName + ' cannot have a weight of ' + categoryWeight + ' because your weight total will be ' + combineWeight + ' (maximum is 100). The maximum weight for this category can be ' + maximumWeight + '.');
+        this.props.addNotification('invalidCategoryWeight', {type: 'outOfBounds', weight: categoryWeight, combined: combineWeight, max: maximumWeight});
+        return;
       } else {
         this.handleCloseCategory();
         this.props.addCategory(categoryName, categoryWeight);

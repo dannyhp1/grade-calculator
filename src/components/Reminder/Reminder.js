@@ -117,7 +117,7 @@ class Reminder extends React.Component {
             horizontal: 'right',
           }}
           open={this.state.noCategories}
-          autoHideDuration={6500}
+          autoHideDuration={2500}
           onClose={this.noCategoriesClose}>
           <MySnackbarContentWrapper
             onClose={this.noCategoriesClose}

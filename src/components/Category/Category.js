@@ -192,14 +192,17 @@ class Category extends Component {
     const totalWeight = this.props.totalWeight;
 
     if(categoryName === '') {
-      alert('You cannot have an empty name for a category!');
+      this.props.addNotification('invalidModifyCategory', {type: 'empty'});
       return false;
-    } else if(categoryWeight <= 0) {
-      alert('The category cannot 0 or negative weight!');
+    } else if(categoryWeight === '') {
+      this.props.addNotification('invalidModifyCategory', {type: 'noWeight'});
       return false;
-    } else if((100 - (totalWeight - this.getCategoryWeight())) < categoryWeight) {
+    } else if(parseFloat(categoryWeight) <= 0 || parseFloat(categoryWeight) > 100) {
+      this.props.addNotification('invalidModifyCategory', {type: 'exceed'});
+      return false;
+    } else if((100 - (totalWeight - this.getCategoryWeight())) < parseFloat(categoryWeight)) {
       const maximumWeight = (100 - (totalWeight - this.getCategoryWeight()));
-      alert('You cannot exceed weight of 100. The maximum weight you can set for this category is ' + maximumWeight + '.');
+      this.props.addNotification('invalidModifyCategory', {type: 'outOfBounds', max: maximumWeight});
       return false;
     }
     return true;
@@ -258,15 +261,14 @@ class Category extends Component {
     const assignmentMaxScore = parseFloat(this.state.newDataMax);
 
     if(assignmentName === '') {
-      alert('You cannot add an assignment with an empty name!');
+      this.props.addNotification('invalidData', {type: 'empty', category: this.getCategoryName()})
+      return;
     } else if(assignmentScore < 0) {
-      alert('You cannot get a negative score on your assignment!');
+      this.props.addNotification('invalidData', {type: 'negativeScore'})
+      return;
     } else if(assignmentMaxScore < 0) {
-      alert('The assignment cannot be worth less than 0 points!');
-    } else if(isNaN(assignmentScore)) {
-      alert('You must specify a score you received on this assignment.');
-    } else if(isNaN(assignmentMaxScore)) {
-      alert('You must specify the maximum score on this assignment.');
+      this.props.addNotification('invalidData', {type: 'negativeMax'})
+      return;
     } else {
       this.closeNewDataDialog();
       this.props.addData(this.getCategoryName(), this.state.assignmentID, assignmentName, assignmentScore, assignmentMaxScore);
@@ -319,22 +321,25 @@ class Category extends Component {
     const assignmentScore = this.state.currentDataNewScore;
     const assignmentMaxScore = this.state.currentDataNewMax;
 
+    console.log(assignmentScore);
+    console.log(typeof assignmentScore);
+
     if(assignmentName === '') {
-      alert('You cannot leave the assignment name empty!');
+      this.props.addNotification('invalidModifyData', {type: 'empty'});
       return false;
-    } else if(assignmentScore < 0) {
-      alert('You cannot get a negative score on your assignment!');
+    } else if(assignmentScore === '') {
+      this.props.addNotification('invalidModifyData', {type: 'noScore'});
       return false;
-    } else if(assignmentMaxScore < 0) {
-      alert('The assignment cannot be worth less than 0 points!');
+    } else if(assignmentMaxScore === '') {
+      this.props.addNotification('invalidModifyData', {type: 'noMax'});
       return false;
-    } else if(isNaN(assignmentScore)) {
-      alert('You must specify a score you received on this assignment.');
+    } else if(parseFloat(assignmentScore) < 0) {
+      this.props.addNotification('invalidModifyData', {type: 'negativeScore'});
       return false;
-    } else if(isNaN(assignmentMaxScore)) {
-      alert('You must specify the maximum score on this assignment.');
+    } else if(parseFloat(assignmentMaxScore) < 0) {
+      this.props.addNotification('invalidModifyData', {type: 'negativeMax'});
       return false;
-    }
+    } 
 
     return true;
   }

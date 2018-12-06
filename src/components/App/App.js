@@ -8,6 +8,9 @@ import Reminder from '../Reminder/Reminder';
 import { Grid } from '@material-ui/core';
 import firebase from 'firebase';
 
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
+
 var config = {
   apiKey: "AIzaSyD-JVvjrWqKZjjWBTkpRaKYyIOsE1adDHU",
   authDomain: "dannyhp-grade-calculator.firebaseapp.com",
@@ -20,6 +23,7 @@ var config = {
 firebase.initializeApp(config);
 
 const app = css`
+  background: '#cfdff1';
   text-align: center;
 `;
 
@@ -27,7 +31,202 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = this.getInitialState();
+
+    this.addNotification = this.addNotification.bind(this);
+    this.notificationDOMRef = React.createRef();
   };
+
+  addNotification(type, data) {
+    switch(type) {
+      case 'addCategory':
+        this.notificationDOMRef.current.addNotification({
+          title: "Created new category!",
+          message: data.name + ' was created with weight ' + data.weight + '.',
+          type: "success",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'reset':
+        this.notificationDOMRef.current.addNotification({
+          title: "Resetting the data!",
+          message: 'All grades have been reset!',
+          type: "info",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'noUsernameSave':
+        this.notificationDOMRef.current.addNotification({
+          title: "Error when saving data!",
+          message: 'You must specify a username in order to save the data.',
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'noUsernameLoad':
+        this.notificationDOMRef.current.addNotification({
+          title: "Error when loading data!",
+          message: 'You must specify a username in order to load the data.',
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'invalidLoad':
+        this.notificationDOMRef.current.addNotification({
+          title: "Error loading the data!",
+          message: 'There is no data associated with that username!',
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'finishedLoad':
+        this.notificationDOMRef.current.addNotification({
+          title: "Data successfully loaded!",
+          message: 'Data has been loaded for ' + data.username,
+          type: "success",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'invalidCategoryName':
+        this.notificationDOMRef.current.addNotification({
+          title: "Error creating the category!",
+          message: data.type === 'empty' ? 'You cannot create a category with an empty name!' : 'You cannot have two categories with the same name!',
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'invalidCategoryWeight':
+        var message = '';
+
+        if(data.type === 'empty') {
+          message = 'You must specify a weight for the category.';
+        } else if(data.type === 'exceed') {
+          message = 'You must specify a weight between 1 and 100.';
+        } else if(data.type === 'outOfBounds' ) {
+          message = 'Adding this weight will make the total weight ' + data.combined + '. The maximum weight you can set is ' + data.max;
+        }
+
+        this.notificationDOMRef.current.addNotification({
+          title: "Error creating the category!",
+          message: message,
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'invalidData':
+        var message = '';
+        if(data.type === 'empty') {
+          message = 'You cannot add an assignment with an empty name!';
+        } else if(data.type === 'negativeScore') {
+          message = 'You cannot add an assignment with a negative score!';
+        } else if(data.type === 'negativeMax') {
+          message = 'The maximum score cannot be negative!';
+        }
+
+        this.notificationDOMRef.current.addNotification({
+          title: "Error adding data to " + data.category + '!',
+          message: message,
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'invalidModifyData':
+        var message = '';
+
+        if(data.type === 'empty') {
+          message = 'You cannot add an assignment with an empty name!';
+        } else if(data.type === 'negativeScore') {
+          message = 'You cannot add an assignment with a negative score!';
+        } else if(data.type === 'negativeMax') {
+          message = 'The maximum score cannot be negative!';
+        } else if(data.type === 'noScore') {
+          message = 'You must specify a score!';
+        } else if(data.type === 'noMax') {
+          message = 'You must specify a max score!';
+        }
+
+        this.notificationDOMRef.current.addNotification({
+          title: "Error making changes to the data!",
+          message: message,
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+      case 'invalidModifyCategory':
+        var message = '';
+        if(data.type === 'empty') {
+          message = 'You must specify a name for the category.';
+        } else if(data.type = 'noWeight') {
+          message = 'You must specify a weight for the category!';
+        } else if(data.type === 'exceed') {
+          message = 'You must specify a weight between 1 and 100.';
+        } else if(data.type === 'outOfBounds' ) {
+          message = 'You cannot exceed the maximum weight of 100. The max weight you can set is ' + data.max;
+        }
+
+        this.notificationDOMRef.current.addNotification({
+          title: "Error making changes to the category!",
+          message: message,
+          type: "danger",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
+    }
+  }
 
   getInitialState() {
     const categories = new Map();
@@ -42,10 +241,13 @@ class App extends Component {
       totalWeight: 0.0,
     }
 
+
     return initialState;
   };
 
   reset = () => {
+    this.addNotification('reset', { });
+
     this.setState({
       categoryID: 0,
       categories: new Map(),
@@ -55,7 +257,9 @@ class App extends Component {
     });
   }
 
-  insertLoadedData = (categoryID, categoryList, categoryMapping, categoryData, totalWeight) => {    
+  insertLoadedData = (username, categoryID, categoryList, categoryMapping, categoryData, totalWeight) => {    
+    this.addNotification('finishedLoad', {username: username});
+    
     this.setState({
       categoryID: categoryID,
       categories: categoryList,
@@ -113,11 +317,11 @@ class App extends Component {
           totalWeight: 0.0,
         });
       } catch(e) {
-        alert('There is no data associated with that user!');
+        this.addNotification('invalidLoad', { });
         return;
       }
 
-      this.insertLoadedData(categoryID, categoryMap, categoryMapping, categoryData, totalWeight);
+      this.insertLoadedData(username, categoryID, categoryMap, categoryMapping, categoryData, totalWeight);
     });
   }
 
@@ -175,6 +379,8 @@ class App extends Component {
     newCategories.set(this.state.categoryID, { name: categoryName, weight: categoryWeight, id: this.state.categoryID });
     newData.set(categoryName, new Map());
     newMapping.set(categoryName, this.state.categoryID);
+
+    this.addNotification('addCategory', {name: categoryName, weight: categoryWeight});
 
     this.setState({
       totalWeight: newWeight,
@@ -283,6 +489,7 @@ class App extends Component {
     return categories.map((category, index) => (
       <Grid item lg={4} key={index} style={{direction: 'column'}}>
         <Category
+            addNotification={this.addNotification}
             totalWeight={this.state.totalWeight}
             categories={this.state.categories}
             categoryMapping={this.state.categoryMapping}
@@ -300,7 +507,9 @@ class App extends Component {
   renderReminder = () => {
     const emptyCategories = this.checkEmptyCategories();
     return (
-      <Reminder emptyCategories={emptyCategories} />
+      <div>
+        <Reminder emptyCategories={emptyCategories} />
+      </div>
     );
   }
 
@@ -309,14 +518,15 @@ class App extends Component {
       <div className={app}>
     
         <div style={{ background: '#cfdff1',
-                        height: '110vh' }}>
+                        height: '200vh' }}>
             <CssBaseline />
             <AppHeader loadData={this.loadData}
                        saveData={this.saveData}
                        addCategory={this.addCategory}
-                       categories={this.state.categories} 
+                       data={this.state.data} 
                        currentWeight={this.state.totalWeight}
-                       reset={this.reset}/>
+                       reset={this.reset}
+                       addNotification={this.addNotification}/>
 
             <Grade categories={this.state.categories} data={this.state.data}/>
 
@@ -332,6 +542,7 @@ class App extends Component {
 
         </div>
 
+        <ReactNotification ref={this.notificationDOMRef} />
         {this.renderReminder()}    
       </div>
     );
