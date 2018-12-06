@@ -238,6 +238,19 @@ class App extends Component {
           dismissable: { click: true }
         });
         break;
+      case 'deleteCategory':
+        this.notificationDOMRef.current.addNotification({
+          title: "Deleted the category!",
+          message: data.name + ' has been deleted!',
+          type: "info",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3000 },
+          dismissable: { click: true }
+        });
+        break;
     }
   }
 
@@ -450,6 +463,8 @@ class App extends Component {
       data: data,
       totalWeight: newTotal,
     })
+
+    this.addNotification('deleteCategory', {name: categoryName});
   }
 
   addData = (categoryName, assignmentID, assignmentName, assignmentScore, assignmentMaxScore) => {
