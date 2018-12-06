@@ -116,6 +116,19 @@ class App extends Component {
           dismissable: { click: true }
         });
         break;
+      case 'finishedSave':
+        this.notificationDOMRef.current.addNotification({
+          title: "Data has been successfully saved",
+          message: 'Data has been saved under the username: ' + data.username,
+          type: "success",
+          insert: "bottom",
+          container: "bottom-right",
+          animationIn: ["animated", "fadeIn"],
+          animationOut: ["animated", "fadeOut"],
+          dismiss: { duration: 3500 },
+          dismissable: { click: true }
+        });
+        break;
       case 'invalidCategoryName':
         this.notificationDOMRef.current.addNotification({
           title: "Error creating the category!",
@@ -363,6 +376,8 @@ class App extends Component {
       data: dataMapping,
       totalWeight: this.state.totalWeight,
     });  
+
+    this.addNotification('finishedSave', {username: username});
   }
 
   checkEmptyCategories = () => {
