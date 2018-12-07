@@ -3,6 +3,7 @@ A tool that enables students to calculate their current overall grade for a curr
 
 
 Currently deployed at: https://gradecalculator.dannyhp.com
+
 Public release date: TBA
 
 
