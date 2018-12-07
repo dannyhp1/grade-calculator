@@ -355,6 +355,8 @@ class App extends Component {
 
   saveData = (username) => {
 
+    console.log('called!');
+
     var allCategories = [ ];
 
     for(var [key, value] of this.state.categories) {
@@ -383,7 +385,7 @@ class App extends Component {
         dataMapping.push(thisCategory);
     }
 
-    firebase.database().ref('users/' + username).set({
+    firebase.database().ref('users/' + username).update({
       username: username,
       categoryID: this.state.categoryID,
       categories: allCategories,
