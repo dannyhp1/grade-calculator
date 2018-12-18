@@ -552,7 +552,7 @@ class App extends Component {
       <div className={app}>
     
         <div style={{ background: '#cfdff1',
-                        height: '200vh' }}>
+                        height: '100vh' }}>
             <CssBaseline />
             <AppHeader loadData={this.loadData}
                        saveData={this.saveData}
