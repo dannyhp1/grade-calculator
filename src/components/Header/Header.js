@@ -9,14 +9,10 @@ import {
 
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import SaveIcon from '@material-ui/icons/Save';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 
 class Header extends Component {
-  constructor (props) {
-    super(props);
-  };
-
   render() {
     return (
       <AppBar style={{ background: '#28559A', fontFamily: 'Roboto', margin: 0, padding: 0 }}
@@ -42,7 +38,7 @@ class Header extends Component {
                 </span>
               </Button>
               <Button onClick={this.handleOpenSave} color='inherit' style={{ height: 40 }}>
-                <CloudUploadIcon />
+                <SaveIcon />
                 <span style={{ marginLeft: 5, paddingRight: 0, marginRight: 0, textAlign: 'center' }}>
                   Save
                 </span>
@@ -53,7 +49,7 @@ class Header extends Component {
                   Clear
                 </span>
               </Button>
-              <Button onClick={this.handleOpenCategory} color='inherit' style={{ height: 40 }}>
+              <Button onClick={this.props.openNewCategory} color='inherit' style={{ height: 40 }}>
                 <AddIcon />
                 <span style={{ marginLeft: 5 }}>
                   New Category
