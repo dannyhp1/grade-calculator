@@ -121,7 +121,12 @@ class App extends Component {
   saveData = (username) => {
     /* Save data here! */
 
-    console.log('Saving data for: ' + username);
+    /*
+    axios.post('/user', {
+      firstName: 'Fred',
+      lastName: 'Flintstone'
+    })
+    */
 
     this.setState({
       ...this.state,
@@ -144,7 +149,7 @@ class App extends Component {
   }
 
   loadData = (username) => {
-    const fetchUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/' + username;
+    const fetchUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/load/' + username;
 
     axios.get(fetchUrl)
       .then(response => {
