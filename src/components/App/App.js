@@ -119,7 +119,7 @@ class App extends Component {
   }
 
   saveData = (username) => {
-    const postUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/save/' + username;
+    const postUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/save';
     // const postUrl = 'http://localhost:5000/gradecalculator/save';
 
     axios.post(postUrl, {
