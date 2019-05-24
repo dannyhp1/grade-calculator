@@ -119,18 +119,18 @@ class App extends Component {
   }
 
   saveData = (username) => {
-    /* Save data here! */
+    const postUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/save/' + username;
+    // const postUrl = 'http://localhost:5000/gradecalculator/save';
 
-    /*
-    axios.post('/user', {
-      firstName: 'Fred',
-      lastName: 'Flintstone'
-    })
-    */
+    axios.post(postUrl, {
+      username: username,
+      categories: this.state.categories,
+    }).then(response => {
+      this.setState({
+        ...this.state,
+        saveData: false,
+      });
 
-    this.setState({
-      ...this.state,
-      saveData: false,
     });
   }
 
@@ -150,6 +150,7 @@ class App extends Component {
 
   loadData = (username) => {
     const fetchUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/load/' + username;
+    // const fetchUrl = 'http://localhost:5000/gradecalculator/load/' + username;
 
     axios.get(fetchUrl)
       .then(response => {
@@ -159,6 +160,8 @@ class App extends Component {
         if(data['status'] !== 200) {
           this.setState({
             ...this.state,
+            categoryID: 0,
+            categories: [ ],
             loadData: false,
           });
 
@@ -194,7 +197,7 @@ class App extends Component {
           categories: categories,
           categoryID: data['max_category'],
         });
-      })
+      });
   }
 
   render() {
