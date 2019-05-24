@@ -31,19 +31,19 @@ class Header extends Component {
             </Grid>
 
             <Grid item>
-              <Button onClick={this.handleOpenLoad} color='inherit' style={{ height: 40 }}>
+              <Button onClick={this.props.load} color='inherit' style={{ height: 40 }}>
                 <CloudDownloadIcon />
                 <span style={{ marginLeft: 5, paddingRight: 0, marginRight: 0, textAlign: 'center' }}>
                   Load
                 </span>
               </Button>
-              <Button onClick={this.handleOpenSave} color='inherit' style={{ height: 40 }}>
+              <Button onClick={this.props.save} color='inherit' style={{ height: 40 }}>
                 <SaveIcon />
                 <span style={{ marginLeft: 5, paddingRight: 0, marginRight: 0, textAlign: 'center' }}>
                   Save
                 </span>
               </Button>
-              <Button onClick={this.handleOpenReset} color='inherit' style={{ height: 40 }}>
+              <Button onClick={this.props.clear} color='inherit' style={{ height: 40 }}>
                 <CloseIcon />
                 <span style={{ marginLeft: 5 }}>
                   Clear
