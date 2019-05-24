@@ -144,16 +144,14 @@ class App extends Component {
   }
 
   loadData = (username) => {
-    /* Load data here! */
-    const fetchUrl = 'http://52.9.215.21/gradecalculator/' + username;
-    //const fetchUrl = 'http://127.0.0.1:5000/gradecalculator/' + username;
+    const fetchUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/' + username;
 
     axios.get(fetchUrl)
       .then(response => {
         console.log(response)
         const data = response['data'];
 
-        if(data['status'] != 200) {
+        if(data['status'] !== 200) {
           this.setState({
             ...this.state,
             loadData: false,
