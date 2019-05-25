@@ -14,9 +14,6 @@ class ModifyCategory extends React.Component {
   constructor (props) {
     super(props);
 
-    console.log('Setting state:')
-    console.log(this.props.current);
-
     this.state = {
       previousName: this.props.current === null ? '' : this.props.current['name'],
       name: this.props.current === null ? '' : this.props.current['name'],

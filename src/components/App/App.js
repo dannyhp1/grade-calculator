@@ -6,9 +6,11 @@ import Header from '../Header/Header';
 import Grade from '../Grade/Grade';
 import CategoryList from '../Category/CategoryList';
 
+import Announcement from '../Forms/Announcement';
 import NewCategory from '../Forms/NewCategory';
 import NewAssignment from '../Forms/NewAssignment';
 import ModifyCategory from '../Forms/ModifyCategory';
+import ModifyAssignment from '../Forms/ModifyAssignment';
 import SaveData from '../Forms/SaveData';
 import LoadData from '../Forms/LoadData';
 
@@ -22,6 +24,7 @@ class App extends Component {
     super(props);
 
     this.state = {
+      announcement: true,
       saveData: false,
       loadData: false,
       newCategory: false,
@@ -35,6 +38,20 @@ class App extends Component {
       modifyAssignment: null,
     };
   };
+
+  openAnnouncement = () => {
+    this.setState({
+      ...this.state,
+      announcement: true,
+    });
+  }
+
+  closeAnnouncement = () => {
+    this.setState({
+      ...this.state,
+      announcement: false,
+    });
+  }
 
   saveData = (username) => {
     axios.post(postUrl, {
@@ -104,9 +121,6 @@ class App extends Component {
           categories.push({ id: id, name: name, weight: weight, aid: max_assignments, assignments: assignments });
         }
 
-        console.log(categories);
-        console.log(data['max_category']);
-
         this.setState({
           ...this.state,
           loadData: false,
@@ -142,7 +156,7 @@ class App extends Component {
     let categories = this.state.categories;
 
     /* Each category has its assigned ID (fetched from state) and aid (assignment id) is default to 0 for first assignment. */
-    const newCategory = {id: this.state.categoryID, name: name, weight: weight, aid: 0, assignments: [ ]};
+    const newCategory = {id: this.state.categoryID, name: name.toLowerCase(), weight: weight, aid: 0, assignments: [ ]};
     categories.push(newCategory);
 
     this.setState({
@@ -150,7 +164,7 @@ class App extends Component {
       newCategory: false,
       categories: categories,
       categoryID: this.state.categoryID + 1,
-    }, console.log(this.state));
+    });
   }
 
   openNewAssignment = (categoryID, assignmentID) => {
@@ -190,7 +204,7 @@ class App extends Component {
       ...this.state,
       newAssignment: false,
       categories: categories,
-    }, console.log(this.state));
+    });
   }
 
   openSaveData = () => {
@@ -270,6 +284,86 @@ class App extends Component {
     });
   }
 
+  renderChangeAssignment = () => {
+    if(this.state.changeAssignment) { 
+      return (
+        <ModifyAssignment show={this.state.changeAssignment} close={this.closeChangeAssignment} delete={this.deleteAssignment} submit={this.changeAssignment} current={this.state.modifyAssignment} /> 
+      );
+    }
+  }
+
+  openChangeAssignment = (category, assignment) => {
+    const categories = this.state.categories;
+    let categoryIndex = null;
+
+    for(let i = 0; i < categories.length; ++i) {
+      if(categories[i]['id'] === category) {
+        categoryIndex = i;
+        break;
+      }
+    }
+
+    const assignments = categories[categoryIndex]['assignments'];
+    let assignmentIndex = null;
+    
+    for(let j = 0; j < assignments.length; ++j) {
+      if(assignments[j]['id'] === assignment) {
+        assignmentIndex = j;
+        break;
+      }
+    }
+
+    const currentAssignment = categories[categoryIndex]['assignments'][assignmentIndex];
+
+    this.setState({
+      ...this.state,
+      changeAssignment: true,
+      modifyCategory: {index: categoryIndex},
+      modifyAssignment: {index: assignmentIndex, id: currentAssignment['id'], name: currentAssignment['name'], score: currentAssignment['score'], max: currentAssignment['max']}
+    })
+  }
+
+  closeChangeAssignment = () => {
+    this.setState({
+      ...this.state,
+      changeAssignment: false,
+      modifyCategory: null,
+      modifyAssignment: null,
+    });
+  }
+
+  changeAssignment = (name, score, max) => {
+    let categories = this.state.categories;
+    const categoryIndex = this.state.modifyCategory['index'];
+    const assignmentIndex = this.state.modifyAssignment['index'];
+    const currentAssignment = categories[categoryIndex]['assignments'][assignmentIndex];
+
+    categories[categoryIndex]['assignments'][assignmentIndex] = {id: currentAssignment['id'], name: name, score: score, max: max}
+
+    this.setState({
+      ...this.state,
+      categories: categories,
+      changeAssignment: false,
+      modifyCategory: null,
+      modifyAssignment: null,
+    });
+  }
+
+  deleteAssignment = () => {
+    let categories = this.state.categories;
+    const categoryIndex = this.state.modifyCategory['index'];
+    const assignmentIndex = this.state.modifyAssignment['index'];
+
+    categories[categoryIndex]['assignments'].splice(assignmentIndex, 1);
+    
+    this.setState({
+      ...this.state,
+      changeAssignment: false,
+      modifyCategory: null,
+      modifyAssignment: null,
+    })
+  }
+
   render() {
     return (
       <div style={{ fontFamily: 'Roboto', textAlign: 'center' }}>
@@ -277,12 +371,14 @@ class App extends Component {
         <Header openNewCategory={this.openNewCategory} clear={this.clearGrade} save={this.openSaveData} load={this.openLoadData} />
         <Grade categories={this.state.categories} />
         <CategoryList categories={this.state.categories} openNewAssignment={this.openNewAssignment} 
-                      openModifyCategory={this.openChangeCategory}
+                      openModifyCategory={this.openChangeCategory} openModifyAssignment={this.openChangeAssignment}
         />
 
+        <Announcement show={this.state.announcement} close={this.closeAnnouncement} />
         <NewCategory show={this.state.newCategory} close={this.closeNewCategory} submit={this.addNewCategory} />
         <NewAssignment show={this.state.newAssignment} close={this.closeNewAssignment} submit={this.addNewAssignment} />
         {this.renderChangeCategory()}
+        {this.renderChangeAssignment()}
         <SaveData show={this.state.saveData} close={this.closeSaveData} submit={this.saveData} />
         <LoadData show={this.state.loadData} close={this.closeLoadData} submit={this.loadData} />
       </div>

@@ -47,7 +47,6 @@ class Grade extends Component {
 
   getGradeColor = (grade) => {
     const colors = ['#aa2e25', '#f44336', '#ff9800', '#6fbf73', '#4caf50', '#357a38'];
-    console.log(grade);
 
     if(grade < 60.00) {
       return colors[0];

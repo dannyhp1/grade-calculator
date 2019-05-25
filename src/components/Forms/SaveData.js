@@ -18,6 +18,12 @@ class SaveData extends React.Component {
     };
   };
 
+  handleKeyPress = (e) => {
+    if(e.key === 'Enter') {
+      this.submitForm();
+    }
+  }
+
   checkName = () => {
     const name = this.state.name;
     return name !== null && name !== '';
@@ -62,7 +68,7 @@ class SaveData extends React.Component {
             type="text"
             required={true}
             onChange={(e) => this.changeName(e)}
-            // onKeyPress={(e) => this.handleKeyPress(e)}
+            onKeyPress={(e) => this.handleKeyPress(e)}
             fullWidth
           />
         </DialogContent>

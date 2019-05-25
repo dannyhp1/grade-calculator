@@ -5,11 +5,6 @@ import {
   Card,
   CardHeader,
   CardContent,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
 } from '@material-ui/core';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -27,31 +22,29 @@ class Category extends Component {
     this.props.openNewAssignment(this.props.category['id'], this.props.category['aid']);
   }
 
-  modifyAssignment = () => {
+  modifyCategory = () => {
     this.props.openModifyCategory(this.props.category['id']);
+  }
+
+  modifyAssignment = (id) => {
+    this.props.openModifyAssignment(this.props.category['id'], id);
   }
 
   renderAssignments = () => {
     const assignments = this.props.category['assignments'];
 
     return assignments.map((assignment, index) => (
-      <TableRow key={index}>
-        <TableCell>
-          {assignment['name']}
-        </TableCell>
-        <TableCell numeric>
-          {assignment['score']}
-        </TableCell>
-        <TableCell numeric>
-          {assignment['max']}
-        </TableCell>
-      </TableRow>
+      <tr key={index} onClick={(e) => this.modifyAssignment(assignment['id'])}>
+        <td>{assignment['name']}</td>
+        <td>{assignment['score']}</td>
+        <td>{assignment['max']}</td>
+      </tr>
     ));
   }
 
   getHeader = () => {
     return (
-      <Button style={{ width: '100%' }} onClick={this.modifyAssignment}>
+      <Button style={{ width: '100%' }} onClick={this.modifyCategory}>
         {this.props.category['name']} - {this.props.category['weight']}%
       </Button>
     );
@@ -64,28 +57,60 @@ class Category extends Component {
           <CardHeader
             title={this.getHeader()}
             action={
-              <IconButton style={{ marginRight: 10 }} onClick={this.addAssignment}>
+              <IconButton style={{ marginRight: 10, marginTop: 7.5 }} onClick={this.addAssignment}>
                 <AddIcon />
               </IconButton>
             }
             style={{ marginBottom: 0, paddingBottom: 0 }}
           />
-          <CardContent style={{ width: '100%' }}>
-            <Table style={{ display: 'block', color: '#000000' }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Assignment</TableCell>
-                  <TableCell numeric>Score</TableCell>
-                  <TableCell numeric>Max</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
+          <CardContent style={{ width: '100%', textAlign: 'center' }}>
+            <table className="table table-hover">
+              <thead className="thead">
+                <tr>
+                  <th scope="col">Assignment</th>
+                  <th scope="col">Score</th>
+                  <th scope="col">Max</th>
+                </tr>
+              </thead>
+              <tbody>
                 {this.renderAssignments()}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </CardContent>
         </Card>
       </Grid>
+
+      // <Grid sm={12} md={6} lg={4} item>
+      //   <Card style={cardStyle}>
+      //     <CardHeader
+      //       title={this.getHeader()}
+      //       action={
+      //         <IconButton style={{ marginRight: 10 }} onClick={this.addAssignment}>
+      //           <AddIcon />
+      //         </IconButton>
+      //       }
+      //       style={{ marginBottom: 0, paddingBottom: 0 }}
+      //     />
+      //     <CardContent style={{ width: '100%' }}>
+      //       <Table style={{ display: 'block', color: '#000000', textAlign: 'center', width: '100%' }}>
+      //         <span style={{ width: '100%', textAlign: 'center' }}>
+      //           <TableHead>
+      //             <TableRow>
+      //               <TableCell>Assignment</TableCell>
+      //               <TableCell numeric>Score</TableCell>
+      //               <TableCell numeric>Max</TableCell>
+      //             </TableRow>
+      //           </TableHead>
+      //         </span>
+      //         <TableBody>
+      //           <Grid container>
+      //             {this.renderAssignments()}
+      //           </Grid>
+      //         </TableBody>
+      //       </Table>
+      //     </CardContent>
+      //   </Card>
+      // </Grid>
     );
   }
 }
