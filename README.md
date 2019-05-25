@@ -1,9 +1,7 @@
-## Grade Calculator
-Grade Calculator is a tool that enables students to calculate their overall grade with ease. With each class having
-a unqiue grading scale, students may have a difficult time calculating their grade if no tools are provided. This is
-where the Grade Calculator excels! The tool is user-friendly and should to your go-to when finals come around.
+## Grade Calculator - V2
+Grade Calculator is a tool that enables students to calculate their overall grade with ease. With each class having a unqiue grading scale, students may have a difficult time calculating their grade if no tools are provided. This is where the Grade Calculator excels! The tool is user-friendly and should to your go-to when finals come around.
 
-Currently deployed at: https://dev-gradecalculator.dannyhp.com
+Currently deployed at: https://gradecalculator.dannyhp.com
 
 Public release date: TBA
 
