@@ -12,8 +12,6 @@ const container = css`
 `;
 
 class Grade extends Component {
-
-
   calculateGrade = () => {
     let totalWeight = 0.00;
     let totalGrade = 0.00;

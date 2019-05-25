@@ -8,8 +8,14 @@ import CategoryList from '../Category/CategoryList';
 
 import NewCategory from '../Forms/NewCategory';
 import NewAssignment from '../Forms/NewAssignment';
+import ModifyCategory from '../Forms/ModifyCategory';
 import SaveData from '../Forms/SaveData';
 import LoadData from '../Forms/LoadData';
+
+const fetchUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/load/';
+const postUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/save';
+// const postUrl = 'http://localhost:5000/gradecalculator/save';
+// const fetchUrl = 'http://localhost:5000/gradecalculator/load/';
 
 class App extends Component {
   constructor (props) {
@@ -20,6 +26,8 @@ class App extends Component {
       loadData: false,
       newCategory: false,
       newHomework: false,
+      changeCategory: false,
+      changeAssignment: false,
       /* Categories start at ID = 0. */
       categoryID: 0,
       categories: [ ],
@@ -27,6 +35,86 @@ class App extends Component {
       modifyAssignment: null,
     };
   };
+
+  saveData = (username) => {
+    axios.post(postUrl, {
+      username: username,
+      categories: this.state.categories,
+    }).then(response => {
+      this.setState({
+        ...this.state,
+        saveData: false,
+      });
+
+    });
+  }
+
+  openLoadData = () => {
+    this.setState({
+      ...this.state,
+      loadData: true,
+    });
+  }
+
+  closeLoadData = () => {
+    this.setState({
+      ...this.state,
+      loadData: false,
+    });
+  }
+
+  loadData = (username) => {
+    const url = fetchUrl + username;
+
+    axios.get(url)
+      .then(response => {
+        const data = response['data'];
+
+        if(data['status'] !== 200) {
+          this.setState({
+            ...this.state,
+            categoryID: 0,
+            categories: [ ],
+            loadData: false,
+          });
+
+          return;
+        }
+
+        let categories = [ ];
+
+        for(let i = 0; i < data['categories'].length; ++i) {
+          const id = data['categories'][i][0]
+          const name = data['categories'][i][1]
+          const weight = data['categories'][i][2]
+          const max_assignments = data['categories'][i][3]
+
+          let assignments = [ ]
+          const assignmentData = data['categories'][i][4];
+
+          for(let j = 0; j < assignmentData.length; ++j) {
+            const assignmentID = assignmentData[j][0];
+            const assignmentName = assignmentData[j][1];
+            const assignmentScore = assignmentData[j][2];
+            const assignmentMax = assignmentData[j][3];
+
+            assignments.push({ id: assignmentID, name: assignmentName, score: assignmentScore, max: assignmentMax });
+          }
+
+          categories.push({ id: id, name: name, weight: weight, aid: max_assignments, assignments: assignments });
+        }
+
+        console.log(categories);
+        console.log(data['max_category']);
+
+        this.setState({
+          ...this.state,
+          loadData: false,
+          categories: categories,
+          categoryID: data['max_category'],
+        });
+      });
+  }
 
   clearGrade = () => {
     this.setState({
@@ -95,6 +183,7 @@ class App extends Component {
       }
     }
 
+    categories[index]['aid'] = categories[index]['aid'] + 1;
     categories[index]['assignments'].push({id: this.state.modifyAssignment, name: name, score: score, max: max});
 
     this.setState({
@@ -118,86 +207,67 @@ class App extends Component {
     });
   }
 
-  saveData = (username) => {
-    const postUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/save';
-    // const postUrl = 'http://localhost:5000/gradecalculator/save';
-
-    axios.post(postUrl, {
-      username: username,
-      categories: this.state.categories,
-    }).then(response => {
-      this.setState({
-        ...this.state,
-        saveData: false,
-      });
-
-    });
+  renderChangeCategory = () => {
+    if(this.state.changeCategory) { 
+      return (
+        <ModifyCategory show={this.state.changeCategory} close={this.closeChangeCategory} delete={this.deleteCategory} submit={this.changeCategory} current={this.state.modifyCategory} /> 
+      );
+    }
   }
 
-  openLoadData = () => {
+  openChangeCategory = (id) => {
+    let categories = this.state.categories;
+    let index = null;
+
+    for(let i = 0; i < categories.length; ++i) {
+      if(categories[i]['id'] === id) {
+        index = i;
+        break;
+      }
+    }
+
     this.setState({
       ...this.state,
-      loadData: true,
+      changeCategory: true,
+      modifyCategory: {index: index, id: id, name: this.state.categories[index]['name'], weight: this.state.categories[index]['weight']},
     });
   }
 
-  closeLoadData = () => {
+  closeChangeCategory = () => {
     this.setState({
       ...this.state,
-      loadData: false,
+      changeCategory: false,
+      modifyCategory: null,
     });
   }
 
-  loadData = (username) => {
-    const fetchUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/load/' + username;
-    // const fetchUrl = 'http://localhost:5000/gradecalculator/load/' + username;
+  changeCategory = (name, weight) => {
+    let categories = this.state.categories;
+    const details = this.state.modifyCategory;
+    const current = categories[details['index']];
 
-    axios.get(fetchUrl)
-      .then(response => {
-        console.log(response)
-        const data = response['data'];
+    categories[details['index']] = {id: current['id'], name: name, weight: weight, aid: current['aid'], assignments: current['assignments']}
 
-        if(data['status'] !== 200) {
-          this.setState({
-            ...this.state,
-            categoryID: 0,
-            categories: [ ],
-            loadData: false,
-          });
+    this.setState({
+      ...this.state,
+      categories: categories,
+      changeCategory: false,
+      modifyCategory: null,
+    });
+  }
 
-          return;
-        }
+  deleteCategory = () => {
+    let categories = this.state.categories;
+    const details = this.state.modifyCategory;
+    
+    categories.splice(details['index'], 1);
 
-        let categories = [ ];
-
-        for(let i = 0; i < data['categories'].length; ++i) {
-          const id = data['categories'][i][0]
-          const name = data['categories'][i][1]
-          const weight = data['categories'][i][2]
-          const max_assignments = data['categories'][i][3]
-
-          let assignments = [ ]
-          const assignmentData = data['categories'][i][4];
-
-          for(let j = 0; j < assignmentData.length; ++j) {
-            const assignmentID = assignmentData[j][0];
-            const assignmentName = assignmentData[j][1];
-            const assignmentScore = assignmentData[j][2];
-            const assignmentMax = assignmentData[j][3];
-
-            assignments.push({ id: assignmentID, name: assignmentName, score: assignmentScore, max: assignmentMax });
-          }
-
-          categories.push({ id: id, name: name, weight: weight, aid: max_assignments, assignments: assignments });
-        }
-
-        this.setState({
-          ...this.state,
-          loadData: false,
-          categories: categories,
-          categoryID: data['max_category'],
-        });
-      });
+    this.setState({
+      ...this.state,
+      categories: categories,
+      changeCategory: false,
+      modifyCategory: false,
+    });
   }
 
   render() {
@@ -206,10 +276,13 @@ class App extends Component {
         <CssBaseline />
         <Header openNewCategory={this.openNewCategory} clear={this.clearGrade} save={this.openSaveData} load={this.openLoadData} />
         <Grade categories={this.state.categories} />
-        <CategoryList categories={this.state.categories} openNewAssignment={this.openNewAssignment} />
+        <CategoryList categories={this.state.categories} openNewAssignment={this.openNewAssignment} 
+                      openModifyCategory={this.openChangeCategory}
+        />
 
         <NewCategory show={this.state.newCategory} close={this.closeNewCategory} submit={this.addNewCategory} />
         <NewAssignment show={this.state.newAssignment} close={this.closeNewAssignment} submit={this.addNewAssignment} />
+        {this.renderChangeCategory()}
         <SaveData show={this.state.saveData} close={this.closeSaveData} submit={this.saveData} />
         <LoadData show={this.state.loadData} close={this.closeLoadData} submit={this.loadData} />
       </div>

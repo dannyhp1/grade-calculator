@@ -10,7 +10,9 @@ class CategoryList extends Component {
     const categories = this.props.categories;
 
     return categories.map((category, index) => (
-      <Category category={category} openNewAssignment={this.props.openNewAssignment} key={index}/>
+      <Category key={index} category={category} openNewAssignment={this.props.openNewAssignment}
+                openModifyCategory={this.props.openModifyCategory} 
+      />
     ));
 
   }

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { 
   Grid,
+  Button,
   Card,
   CardHeader,
   CardContent,
@@ -26,6 +27,10 @@ class Category extends Component {
     this.props.openNewAssignment(this.props.category['id'], this.props.category['aid']);
   }
 
+  modifyAssignment = () => {
+    this.props.openModifyCategory(this.props.category['id']);
+  }
+
   renderAssignments = () => {
     const assignments = this.props.category['assignments'];
 
@@ -45,7 +50,11 @@ class Category extends Component {
   }
 
   getHeader = () => {
-    return this.props.category['name'] + ' - ' + this.props.category['weight'] + '%';
+    return (
+      <Button style={{ width: '100%' }} onClick={this.modifyAssignment}>
+        {this.props.category['name']} - {this.props.category['weight']}%
+      </Button>
+    );
   }
 
   render() {
