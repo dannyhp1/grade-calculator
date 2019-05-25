@@ -28,8 +28,8 @@ class Announcement extends React.Component {
             <a href='https://github.com/dannyhp1/grade-calculator/issues' rel='noopener noreferrer' target='_blank'> here</a>.
           </Typography>
           <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
-            In addition, are many additional features that are still in development. Therefore, 
-            expect frequent updates once those features are complete!
+            In addition, there are many additional features that are still in development, so 
+            expect frequent updates!
           </Typography>
         </DialogContent>
         <DialogActions>
