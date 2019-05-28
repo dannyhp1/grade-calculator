@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import axios from 'axios';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import Header from '../Header/Header';
 import Grade from '../Grade/Grade';
 import CategoryList from '../Category/CategoryList';
+import Ad from '../Ads/Ad';
 
 import Announcement from '../Forms/Announcement';
 import NewCategory from '../Forms/NewCategory';
@@ -19,9 +21,16 @@ const postUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/save
 // const postUrl = 'http://localhost:5000/gradecalculator/save';
 // const fetchUrl = 'http://localhost:5000/gradecalculator/load/';
 
+function initializeReactGA() {
+  ReactGA.initialize('UA-129689668-1');
+  ReactGA.pageview('/');
+}
+
 class App extends Component {
   constructor (props) {
     super(props);
+
+    initializeReactGA();
 
     this.state = {
       announcement: true,
@@ -369,6 +378,7 @@ class App extends Component {
       <div style={{ fontFamily: 'Roboto', textAlign: 'center' }}>
         <CssBaseline />
         <Header openNewCategory={this.openNewCategory} clear={this.clearGrade} save={this.openSaveData} load={this.openLoadData} />
+        <Ad />
         <Grade categories={this.state.categories} />
         <CategoryList categories={this.state.categories} openNewAssignment={this.openNewAssignment} 
                       openModifyCategory={this.openChangeCategory} openModifyAssignment={this.openChangeAssignment}
