@@ -21,6 +21,12 @@ class ModifyCategory extends React.Component {
     }
   };
 
+  handleKeyPress = (e) => {
+    if(e.key === 'Enter') {
+      this.submitForm();
+    }
+  }
+
   checkName = () => {
     const name = this.state.name;
     return name !== null && name !== '';
@@ -81,7 +87,7 @@ class ModifyCategory extends React.Component {
             type="text"
             required={true}
             onChange={(e) => this.changeName(e)}
-            // onKeyPress={(e) => this.handleKeyPress(e)}
+            onKeyPress={(e) => this.handleKeyPress(e)}
             fullWidth
           />
           <TextField
@@ -93,7 +99,7 @@ class ModifyCategory extends React.Component {
             inputProps={{ min: '1', max: '100', step: '0.5' }}
             required={true}
             onChange={(e) => this.changeWeight(e)}
-            // onKeyPress={(e) => this.handleKeyPress(e)}
+            onKeyPress={(e) => this.handleKeyPress(e)}
             fullWidth
           />
         </DialogContent>
