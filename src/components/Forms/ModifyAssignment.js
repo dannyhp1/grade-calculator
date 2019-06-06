@@ -20,12 +20,6 @@ class ModifyAssignment extends React.Component {
     };
   };
 
-  handleKeyPress = (e) => {
-    if(e.key === 'Enter') {
-      this.submitForm();
-    }
-  }
-
   checkName = () => {
     const name = this.state.name;
     return name !== null && name !== '';
@@ -93,7 +87,7 @@ class ModifyAssignment extends React.Component {
             type="text"
             required={true}
             onChange={(e) => this.changeName(e)}
-            onKeyPress={(e) => this.handleKeyPress(e)}
+            // onKeyPress={(e) => this.handleKeyPress(e)}
             fullWidth
           />
           <TextField
@@ -106,7 +100,7 @@ class ModifyAssignment extends React.Component {
             placeholder="90"
             required={true}
             onChange={(e) => this.changeScore(e)}
-            onKeyPress={(e) => this.handleKeyPress(e)}
+            // onKeyPress={(e) => this.handleKeyPress(e)}
             fullWidth
           />
           <TextField
@@ -119,7 +113,7 @@ class ModifyAssignment extends React.Component {
             placeholder="100"
             required={true}
             onChange={(e) => this.changeMax(e)}
-            onKeyPress={(e) => this.handleKeyPress(e)}
+            // onKeyPress={(e) => this.handleKeyPress(e)}
             fullWidth
           />
         </DialogContent>
