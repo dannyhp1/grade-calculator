@@ -378,7 +378,6 @@ class App extends Component {
       <div style={{ fontFamily: 'Roboto', textAlign: 'center' }}>
         <CssBaseline />
         <Header openNewCategory={this.openNewCategory} clear={this.clearGrade} save={this.openSaveData} load={this.openLoadData} />
-        <Ad />
         <Grade categories={this.state.categories} />
         <CategoryList categories={this.state.categories} openNewAssignment={this.openNewAssignment} 
                       openModifyCategory={this.openChangeCategory} openModifyAssignment={this.openChangeAssignment}
