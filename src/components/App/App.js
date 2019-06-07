@@ -383,7 +383,7 @@ class App extends Component {
                       openModifyCategory={this.openChangeCategory} openModifyAssignment={this.openChangeAssignment}
         />
 
-        <Announcement show={this.state.announcement} close={this.closeAnnouncement} />
+        {/* <Announcement show={this.state.announcement} close={this.closeAnnouncement} /> */}
         <NewCategory show={this.state.newCategory} close={this.closeNewCategory} submit={this.addNewCategory} />
         <NewAssignment show={this.state.newAssignment} close={this.closeNewAssignment} submit={this.addNewAssignment} />
         {this.renderChangeCategory()}
