@@ -25,7 +25,7 @@ class Header extends Component {
               <Button color='inherit' style={{ height: 40, cursor: 'default', backgroundColor: 'transparent'}} disableTouchRipple={true}>
                 <Typography variant='title' 
                             color='inherit'>
-                  Grade Calculator (Beta)
+                  Grade Calculator
                 </Typography>
               </Button>
             </Grid>
