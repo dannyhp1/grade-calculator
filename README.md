@@ -1,9 +1,7 @@
-## Grade Calculator - V2
-Grade Calculator is a tool that enables students to calculate their overall grade with ease. With each class having a unqiue grading scale, students may have a difficult time calculating their grade if no tools are provided. This is where the Grade Calculator excels! The tool is user-friendly and should to your go-to when finals come around.
+## Grade Calculator
+The grade calculator provides students with a tool to calculate their overall grade. Students are enrolled in several classes, so it can get difficult for them to calculate their grades without any tools. This is where the grade calculator excels! The tool is user-friendly and should be student's go-to when final season comes around.
 
 Currently deployed at: https://gradecalculator.dannyhp.com
-
-Public release date: TBA
 
 ### To start development:
 #### 1. Install npm and node.js.
