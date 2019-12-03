@@ -14,16 +14,16 @@ class Announcement extends React.Component {
     return (
       <Dialog open={this.props.show} onClose={this.props.close} aria-labelledby="customized-dialog-title">
         <DialogTitle id="customized-dialog-title">
-          Servers currently down!
-        </DialogTitle>
+          Servers are currently down!
+	</DialogTitle>
         <DialogContent dividers>
           <Typography style={{ marginBottom: 15 }} gutterBottom>
-            We are currently in the process of migrating our backend servers to another AWS instance. Therefore,
-            the option to save or load data is currently unavailable. We are working swiftly to get the feature back online!
+	    We are in the process of migrating our servers; therefore, the option to save or load data has been
+	    temporarily disabled. We are working swiftly to get the feature back online. Thank you for your patience.
           </Typography>
           <Divider />
           <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
-            <em>Last updated: November 12, 2019 at 11:15 AM PST</em>
+            <em>Last updated: December 3, 2019 at 12:30 PM PST</em>
           </Typography>
           {/* <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
             In addition, there are many additional features that are still in development, so 
