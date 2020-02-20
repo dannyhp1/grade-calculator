@@ -14,16 +14,18 @@ class Announcement extends React.Component {
     return (
       <Dialog open={this.props.show} onClose={this.props.close} aria-labelledby="customized-dialog-title">
         <DialogTitle id="customized-dialog-title">
-          Servers are currently down!
+          Server is currently down.
 	</DialogTitle>
         <DialogContent dividers>
           <Typography style={{ marginBottom: 15 }} gutterBottom>
-	    We are in the process of migrating our servers; therefore, the option to save or load data has been
-	    temporarily disabled. We are working swiftly to get the feature back online. Thank you for your patience.
+      We are currently in the midst of setting up our core services on our new AWS server. Our Pastebin and Coderpad
+      projects have first priority. Therefore, the option to save/load data has been temporarily disabled. We apologize
+      for any inconvenience we may have caused, but we can assure you that we are working swiftly to get the GradeCalculator
+      back online. Thank you for your patience.
           </Typography>
           <Divider />
           <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
-            <em>Last updated: December 3, 2019 at 12:30 PM PST</em>
+            <em>Last updated: February 19, 2020 at 8:55 PM PST</em>
           </Typography>
           {/* <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
             In addition, there are many additional features that are still in development, so 
