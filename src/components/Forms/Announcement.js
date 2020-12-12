@@ -14,19 +14,12 @@ class Announcement extends React.Component {
     return (
       <Dialog open={this.props.show} onClose={this.props.close} aria-labelledby="customized-dialog-title">
         <DialogTitle id="customized-dialog-title">
-          Server is currently down.
+	  No longer going to be maintained (as of December 2020).
 	</DialogTitle>
         <DialogContent dividers>
           <Typography style={{ marginBottom: 15 }} gutterBottom>
-      We are currently in the midst of setting up our core services on our new AWS server. Our Pastebin and Coderpad
-      projects have first priority. Therefore, the option to save/load data has been temporarily disabled. We apologize
-      for any inconvenience we may have caused, but we can assure you that we are working swiftly to get the GradeCalculator
-      back online. Thank you for your patience.
-          </Typography>
-          <Divider />
-          <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
-            <em>Last updated: February 19, 2020 at 8:55 PM PST</em>
-          </Typography>
+            Grade Calculator is no longer being maintained. However, everything is still functioning properly. There will no longer be anymore updates to this service. To view the source code, please go to the project's <a href='https://github.com/dannyhp1/grade-calculator'>GitHub repository.</a>
+	  </Typography>
           {/* <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
             In addition, there are many additional features that are still in development, so 
             expect frequent updates!
