@@ -18,11 +18,11 @@ import LoadData from '../Forms/LoadData';
 
 let postUrl, fetchUrl;
 if (process.env.NODE_ENV === 'production') {
-  fetchUrl = 'https://grade-calculator-phamdann.herokuapp.com/load';
+  fetchUrl = 'https://grade-calculator-phamdann.herokuapp.com/load/';
   postUrl = 'https://grade-calculator-phamdann.herokuapp.com/save';
 } else {
   postUrl = 'http://localhost:5000/save';
-  fetchUrl = 'http://localhost:5000/load';
+  fetchUrl = 'http://localhost:5000/load/';
 }
 
 function initializeReactGA() {
