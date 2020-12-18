@@ -64,7 +64,7 @@ class LoadData extends React.Component {
             margin="dense"
             id="name"
             label="Username"
-            placeholder="peteranteater"
+            placeholder="mickeymouse"
             type="text"
             required={true}
             onChange={(e) => this.changeName(e)}

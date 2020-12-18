@@ -37,7 +37,7 @@ class App extends Component {
     initializeReactGA();
 
     this.state = {
-      announcement: true,
+      announcement: false,
       saveData: false,
       loadData: false,
       newCategory: false,
