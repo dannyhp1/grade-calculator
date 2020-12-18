@@ -18,7 +18,10 @@ class Announcement extends React.Component {
 	</DialogTitle>
         <DialogContent dividers>
           <Typography style={{ marginBottom: 15 }} gutterBottom>
-            Grade Calculator is no longer being maintained. However, everything is still functioning properly. There will no longer be anymore updates to this service. To view the source code, please go to the project's <a href='https://github.com/dannyhp1/grade-calculator'>GitHub repository.</a>
+            Grade Calculator is no longer being maintained. However, everything is still functioning properly. 
+            The save/load functionality has been reimplemented.
+
+            There will no longer be anymore updates to this service. To view the source code, please go to the project's <a href='https://github.com/dannyhp1/grade-calculator'>GitHub repository.</a>
 	  </Typography>
           {/* <Typography style={{ marginTop: 15, marginBottom: 15 }} gutterBottom>
             In addition, there are many additional features that are still in development, so 

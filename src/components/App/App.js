@@ -16,10 +16,14 @@ import ModifyAssignment from '../Forms/ModifyAssignment';
 import SaveData from '../Forms/SaveData';
 import LoadData from '../Forms/LoadData';
 
-const fetchUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/load/';
-const postUrl = 'https://gradecalculator-server.dannyhp.com/gradecalculator/save';
-// const postUrl = 'http://localhost:5000/gradecalculator/save';
-// const fetchUrl = 'http://localhost:5000/gradecalculator/load/';
+let postUrl, fetchUrl;
+if (process.env.NODE_ENV === 'production') {
+  fetchUrl = 'https://grade-calculator-phamdann.herokuapp.com/load';
+  postUrl = 'https://grade-calculator-phamdann.herokuapp.com/save';
+} else {
+  postUrl = 'http://localhost:5000/save';
+  fetchUrl = 'http://localhost:5000/load';
+}
 
 function initializeReactGA() {
   ReactGA.initialize('UA-129689668-1');
@@ -388,8 +392,8 @@ class App extends Component {
         <NewAssignment show={this.state.newAssignment} close={this.closeNewAssignment} submit={this.addNewAssignment} />
         {this.renderChangeCategory()}
         {this.renderChangeAssignment()}
-        {/* <SaveData show={this.state.saveData} close={this.closeSaveData} submit={this.saveData} />
-        <LoadData show={this.state.loadData} close={this.closeLoadData} submit={this.loadData} /> */}
+        <SaveData show={this.state.saveData} close={this.closeSaveData} submit={this.saveData} />
+        <LoadData show={this.state.loadData} close={this.closeLoadData} submit={this.loadData} />
       </div>
     );
   }
